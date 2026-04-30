@@ -1,4 +1,4 @@
-import { Gauge, type LucideIcon, MessagesSquare } from "lucide-react";
+import { PersonStanding, type LucideIcon, MessagesSquare } from "lucide-react";
 
 export type SiteConfig = typeof siteConfig;
 export type Navigation = {
@@ -14,13 +14,8 @@ export const siteConfig = {
 
 export const navigations: Navigation[] = [
   {
-    icon: Gauge,
-    name: "Dashboard",
+    icon: PersonStanding,
+    name: "Applicant List",
     href: "/",
-  },
-  {
-    icon: MessagesSquare,
-    name: "Ticket",
-    href: "/ticket",
   },
 ];
