@@ -29,9 +29,11 @@ cp .env.example .env
 
 3. Add Appwrite variables to `.env`:
 
+NOTE: this keys are generated and provided by appwrite.
 ```env
 NEXT_PUBLIC_APPWRITE_ENDPOINT=
 NEXT_PUBLIC_APPWRITE_PROJECT_ID=
+NEXT_PUBLIC_APPWRITE_DATABASE_ID=
 NEXT_PUBLIC_APPWRITE_DATABASE_ID=
 ```
 
