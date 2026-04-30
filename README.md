@@ -1,93 +1,81 @@
-# VisActor Next.js Dashboard Template
+# Applicant Tracking Dashboard
 
-A modern dashboard template built with [VisActor](https://visactor.io/) and Next.js, featuring a beautiful UI and rich data visualization components.
+Next.js dashboard template using VisActor charts, Tailwind UI, and Appwrite integration for API/database checks in the ticket page.
 
-[Live Demo](https://visactor-next-template.vercel.app/)
+[Live Demo](https://applicant-tracking.appwrite.network/)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?demo-description=A%20modern%20dashboard%20with%20VisActor%20charts%2C%20dark%20mode%2C%20and%20data%20visualization%20for%20seamless%20analytics.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F646TLqKGSTOnp1CD1IUqoM%2Fa119adac1f5a844f9d42f807ddc075f5%2Fthumbnail.png&demo-title=VisActor%20Next.js%20Template&demo-url=https%3A%2F%2Fvisactor-next-template.vercel.app%2F&from=templates&project-name=VisActor%20Next.js%20Template&repository-name=visactor-nextjs-template&repository-url=https%3A%2F%2Fgithub.com%2Fmengxi-ream%2Fvisactor-next-template&skippable-integrations=1)
+## Stack
 
-## Features
+- Next.js 15
+- React 18
+- TypeScript
+- Tailwind CSS
+- VisActor (`@visactor/vchart`, `@visactor/react-vchart`)
+- Appwrite JavaScript SDK
 
-- 📊 **Rich Visualizations** - Powered by VisActor, including bar charts, gauge charts, circle packing charts, and more
-- 🌗 **Dark Mode** - Seamless dark/light mode switching with system preference support
-- 📱 **Responsive Design** - Fully responsive layout that works on all devices
-- 🎨 **Beautiful UI** - Modern and clean interface built with Tailwind CSS
-- ⚡️ **Next.js 15** - Built on the latest Next.js features and best practices
-- 🔄 **State Management** - Efficient state management with Jotai
-- 📦 **Component Library** - Includes Shadcn components styled with Tailwind
+## Getting Started
 
-## Tech Stack
-
-- [Next.js](https://nextjs.org/) - React framework
-- [VisActor](https://visactor.io/) - Visualization library
-- [Tailwind CSS](https://tailwindcss.com/) - CSS framework
-- [Shadcn](https://ui.shadcn.com/) - UI components
-- [Jotai](https://jotai.org/) - State management
-- [TypeScript](https://www.typescriptlang.org/) - Type safety
-
-## Quick Start
-
-You can deploy this template to Vercel by clicking the button above, or clone this repository and run it locally.
-
-[Github Repo](https://github.com/mengxi-ream/visactor-next-template)
-
-1. Clone this repository
-
-```bash
-git clone https://github.com/mengxi-ream/visactor-next-template
-```
-
-2. Install dependencies
+1. Install dependencies:
 
 ```bash
 pnpm install
 ```
 
-3. Run the development server
+2. Create local env file:
+
+```bash
+cp .env.example .env
+```
+
+3. Add Appwrite variables to `.env`:
+
+```env
+NEXT_PUBLIC_APPWRITE_ENDPOINT=
+NEXT_PUBLIC_APPWRITE_PROJECT_ID=
+NEXT_PUBLIC_APPWRITE_DATABASE_ID=
+```
+
+4. Start dev server:
 
 ```bash
 pnpm dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open `http://localhost:3000`
+
+## Scripts
+
+- `pnpm dev` - Run development server
+- `pnpm build` - Build production app
+- `pnpm start` - Run production server
+- `pnpm lint` - Run lint checks
+
+## Appwrite Notes
+
+- Appwrite client setup lives in `src/lib/appwrite.ts`.
+- Ticket test call lives in `src/app/ticket/page.tsx` (`sendPing` + `fetchDB`).
+- The fetch uses `databases.listCollections(...)` with `NEXT_PUBLIC_APPWRITE_DATABASE_ID`.
 
 ## Project Structure
 
-```bash
+```text
 src/
-├── app/ # App router pages
-├── components/ # React components
-│ ├── chart-blocks/ # Chart components
-│ ├── nav/ # Navigation components
-│ └── ui/ # UI components
-├── config/ # Configuration files
-├── data/ # Sample data
-├── hooks/ # Custom hooks
-├── lib/ # Utility functions
-├── style/ # Global style
-└── types/ # TypeScript types
+├── app/               # App Router pages
+├── components/        # UI and chart components
+├── config/            # Config files
+├── data/              # Mock/sample data
+├── hooks/             # Custom React hooks
+├── lib/               # Utilities and Appwrite client
+├── style/             # Global styles
+└── types/             # Type definitions
 ```
 
-## Charts
+## Deployment
 
-This template includes several chart examples:
-
-- Average Tickets Created (Bar Chart)
-- Ticket by Channels (Gauge Chart)
-- Conversions (Circle Packing Chart)
-- Customer Satisfaction (Linear Progress)
-- Metrics Overview
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+- Deployed under Appwrite Deployments.
+- Ensure all `NEXT_PUBLIC_APPWRITE_*` variables are set in your deployment environment.
+- This project is dependency-managed with `pnpm` (`pnpm-lock.yaml`), so use pnpm in CI/build where possible.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgements
-
-- [VisActor](https://visactor.io/) - For the amazing visualization library
-- [Vercel](https://vercel.com) - For the incredible deployment platform
-- [Next.js](https://nextjs.org/) - For the awesome React framework
+MIT. See `LICENSE`.
