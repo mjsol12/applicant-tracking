@@ -1,40 +1,151 @@
-"use client"
+"use client";
 
-import type { ColumnDef } from "@tanstack/react-table"
-import Link from "next/link"
+import type { ColumnDef } from "@tanstack/react-table";
+import { format, isValid, parse, parseISO } from "date-fns";
+import Link from "next/link";
+import { MoreHorizontal } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type Applicant = {
-  fullName: string
-  email: string
-  phone: string
-  address: string
-  status: "submitted" | "pending" | "processing" | "success" | "failed"
-  appliedRole: string
-  skills: string[]
-  availableStartDate: string
-  expectedSalary: number
-  yearsOfExperience: number
-  $id: string
-  $sequence: string
-  $createdAt: string
-  $updatedAt: string
-  $permissions: string[]
-  $databaseId: string
-  $tableId: string
-}
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  status: "submitted" | "pending" | "processing" | "success" | "failed";
+  appliedRole: string;
+  skills: string[];
+  availableStartDate: string;
+  expectedSalary: number;
+  yearsOfExperience: number;
+  $id: string;
+  $sequence: string;
+  $createdAt: string;
+  $updatedAt: string;
+  $permissions: string[];
+  $databaseId: string;
+  $tableId: string;
+};
 
 export type ApplicantResult = {
-    rows: Applicant[];
-    total: number;  
+  rows: Applicant[];
+  total: number;
+};
+
+function formatCellDate(value: unknown): string {
+  if (value == null || value === "") return "—";
+  const s = String(value).trim();
+  if (!s) return "—";
+
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(s)
+    ? parse(s, "yyyy-MM-dd", new Date())
+    : parseISO(s);
+
+  if (!isValid(d)) return s;
+  return format(d, "MMM d, yyyy");
+}
+
+function ApplicantRowActions({ rowId }: { rowId: string }) {
+  const router = useRouter();
+  const [pending, setPending] = useState(false);
+
+  async function handleDelete() {
+    if (!window.confirm("Delete this applicant?")) return;
+    setPending(true);
+    try {
+      const res = await fetch(
+        `/api/data/applicant?rowId=${encodeURIComponent(rowId)}`,
+        { method: "DELETE", credentials: "include" }
+      );
+      const json = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        window.alert(json.error ?? "Delete failed");
+        return;
+      }
+      router.refresh();
+    } catch {
+      window.alert("Network error");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          aria-label="Row actions"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <MoreHorizontal className="h-4 w-4" aria-hidden />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+        <DropdownMenuItem asChild>
+          <Link href={`/applicant/${rowId}/edit`}>Edit</Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+          disabled={pending}
+          onSelect={(e) => {
+            e.preventDefault();
+            void handleDelete();
+          }}
+        >
+          {pending ? "Deleting…" : "Delete"}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
 export const columns: ColumnDef<Applicant>[] = [
   {
-    accessorKey: "$id",
-    header: "ID",
+    id: "select",
+    header: ({ table }) => (
+      <input
+        type="checkbox"
+        aria-label="Select all rows on page"
+        checked={table.getIsAllPageRowsSelected()}
+        ref={(element) => {
+          if (element) {
+            element.indeterminate = table.getIsSomePageRowsSelected();
+          }
+        }}
+        onChange={(event) => table.toggleAllPageRowsSelected(event.target.checked)}
+        onClick={(event) => event.stopPropagation()}
+        className="h-4 w-4 cursor-pointer accent-primary"
+      />
+    ),
+    cell: ({ row }) => (
+      <input
+        type="checkbox"
+        aria-label="Select row"
+        checked={row.getIsSelected()}
+        onChange={(event) => row.toggleSelected(event.target.checked)}
+        onClick={(event) => event.stopPropagation()}
+        className="h-4 w-4 cursor-pointer accent-primary"
+      />
+    ),
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => <ApplicantRowActions rowId={row.original.$id} />,
   },
   {
     accessorKey: "fullName",
@@ -67,17 +178,6 @@ export const columns: ColumnDef<Applicant>[] = [
   {
     accessorKey: "availableStartDate",
     header: "Available Start",
+    cell: ({ getValue }) => formatCellDate(getValue()),
   },
-  {
-    id: "actions",
-    header: "",
-    cell: ({ row }) => (
-      <Link
-        href={`/applicant/${row.original.$id}/edit`}
-        className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-      >
-        Edit
-      </Link>
-    ),
-  },
-]
+];

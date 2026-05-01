@@ -31,6 +31,7 @@ interface DataTableProps {
 
 export function DataTable({ columns, data }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
+  const [rowSelection, setRowSelection] = useState({})
  
 
   const table = useReactTable({
@@ -40,13 +41,26 @@ export function DataTable({ columns, data }: DataTableProps) {
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
+      rowSelection,
     },
   });
 
   return (<div>
-    
+      <div className="flex items-center py-4">
+        <input
+          className="max-w-lg p-3 w-full rounded-md border "
+          name="availableStartDate"
+          type="string"
+          placeholder="Filter names..."
+          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""} 
+          onChange={(event) =>
+            table.getColumn("email")?.setFilterValue(event.target.value)
+          }
+        />
+      </div>
     <div className="overflow-hidden rounded-md border">
       <Table>
         <TableHeader>
@@ -91,7 +105,7 @@ export function DataTable({ columns, data }: DataTableProps) {
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} className="whitespace-nowrap">
                     {flexRender(
                       cell.column.columnDef.cell,
                       cell.getContext()
