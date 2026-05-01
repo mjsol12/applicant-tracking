@@ -1,7 +1,9 @@
-import { AppwriteException, ID, Query } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import { NextResponse } from "next/server";
 
 import { createSessionClient } from "@/lib/appwrite-server";
+import { isPlainObject } from "@/lib/utils";
+import { withErrorHandling } from "@/lib/withErrorHandling";
 
 type ApplicantTable = { databaseId: string; tableId: string };
 
@@ -21,40 +23,21 @@ async function getTablesDB() {
   return (await createSessionClient()).tablesDB;
 }
 
-function handleError(error: unknown) {
-  if (error instanceof AppwriteException) {
-    const status =
-      error.code >= 400 && error.code < 600 ? error.code : 500;
-    return NextResponse.json(
-      { error: error.message, type: error.type },
-      { status }
-    );
-  }
-  if (error instanceof Error && error.message === "No session") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-  return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-}
-
-function isPlainObject(v: unknown): v is Record<string, unknown> {
-  return typeof v === "object" && v !== null && !Array.isArray(v);
-}
-
 /**
  * GET /api/data/applicant — list rows (same defaults as before: total off, ttl 0).
  * GET /api/data/applicant?rowId=… — single row.
  * Optional: queries=[...] as JSON array (Appwrite Query strings), total=true|false, ttl=number
  */
-export async function GET(request: Request) {
+
+export const GET = withErrorHandling(async(request: Request) => {
   const table = resolveApplicantTable();
   if (table instanceof NextResponse) return table;
 
-  try {
-    const tablesDB = await getTablesDB();
-    const url = new URL(request.url);
-    const rowId = url.searchParams.get("rowId");
-
-    if (rowId) {
+  const tablesDB = await getTablesDB();
+  const url = new URL(request.url);
+  const rowId = url.searchParams.get("rowId");
+  
+  if (rowId) {
       const row = await tablesDB.getRow({
         databaseId: table.databaseId,
         tableId: table.tableId,
@@ -106,21 +89,17 @@ export async function GET(request: Request) {
     const previousCursor = result.rows[0].$id;
 
     return NextResponse.json({ rows: result.rows, total: result.total, previousCursor , nextCursor});
-  } catch (error) {
-    return handleError(error);
-  }
-}
+});
 
 /**
  * POST /api/data/applicant
  * Body: { data: Record<string, unknown>, rowId?: string }
  * If rowId is omitted, Appwrite generates a unique id.
  */
-export async function POST(request: Request) {
+export const POST = withErrorHandling(async (request: Request) => {
   const table = resolveApplicantTable();
   if (table instanceof NextResponse) return table;
 
-  try {
     const body: unknown = await request.json().catch(() => null);
     if (!isPlainObject(body) || !("data" in body)) {
       return NextResponse.json(
@@ -153,20 +132,16 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(row, { status: 201 });
-  } catch (error) {
-    return handleError(error);
-  }
-}
+})
 
 /**
  * PUT /api/data/applicant
  * Body: { rowId: string, data: Record<string, unknown> }
  */
-export async function PUT(request: Request) {
+export const PUT = withErrorHandling( async (request: Request) => {
   const table = resolveApplicantTable();
   if (table instanceof NextResponse) return table;
 
-  try {
     const body: unknown = await request.json().catch(() => null);
     if (!isPlainObject(body)) {
       return NextResponse.json({ error: "Expected JSON body" }, { status: 400 });
@@ -191,21 +166,17 @@ export async function PUT(request: Request) {
     });
 
     return NextResponse.json(row);
-  } catch (error) {
-    return handleError(error);
-  }
-}
+})
 
 /**
  * DELETE /api/data/applicant?rowId=…
  * or DELETE with JSON body: { rowId: string }
  */
-export async function DELETE(request: Request) {
+export const DELETE = withErrorHandling(async (request: Request) => {
   const table = resolveApplicantTable();
   if (table instanceof NextResponse) return table;
 
-  try {
-    const url = new URL(request.url);
+  const url = new URL(request.url);
     let rowId = url.searchParams.get("rowId");
 
     if (!rowId && request.headers.get("content-type")?.includes("application/json")) {
@@ -230,7 +201,4 @@ export async function DELETE(request: Request) {
     });
 
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    return handleError(error);
-  }
-}
+})

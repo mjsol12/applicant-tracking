@@ -12,3 +12,7 @@ export function addThousandsSeparator(num: number) {
 export function numberToPercentage(num: number) {
   return `${num * 100}%`;
 }
+
+export function isPlainObject(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null && !Array.isArray(v);
+}
