@@ -110,7 +110,7 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
 
       <div>
         <label className={labelClass} htmlFor="interviewerId">
-          Interviewer ID
+          Interviewer
         </label>
         <input
           required
@@ -118,7 +118,7 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
           id="interviewerId"
           name="interviewerId"
           type="text"
-          placeholder="user_xxx"
+          placeholder="Name Only Temporary"
         />
       </div>
 
@@ -160,6 +160,7 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
           className={cn(fieldClass, "min-h-[90px] resize-y py-2")}
           id="notes"
           name="notes"
+          required
         />
       </div>
 
