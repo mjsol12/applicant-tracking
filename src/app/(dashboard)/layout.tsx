@@ -6,14 +6,14 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <div className="flex min-h-[100dvh]">
-        <SideNav />
-        <div className="flex-grow overflow-auto">
-          <TopNav title="Applicant List" />
-          <main className="p-4">{children}</main>
-        </div>
+    <div className="flex h-dvh overflow-hidden">
+      <SideNav />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <TopNav title="Applicant List" />
+        <main className="min-h-0 flex-1 p-5">
+          {children}
+        </main>
       </div>
-    </>
+    </div>
   );
 }

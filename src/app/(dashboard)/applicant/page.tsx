@@ -55,13 +55,13 @@ export default async function Page({
   return (
     <>
       <Suspense fallback={<div>Loading data...</div>}>
-          <p className="mb-3 text-sm">
-            <Link href="/applicant/new" className="underline">
-              Add new applicant
-            </Link>
-          </p>
-          <div className="">
-            <Search placeholder="Search applicants" />
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <Search placeholder="Search applicants" />
+              <Link href="/applicant/new" className="underline bg-blue-500 text-white px-4 py-2 rounded-md no-underline">
+                  Add new applicant
+              </Link>
+            </div>
             <DataTable columns={columns} data={data} />
           </div>
       </Suspense>

@@ -14,7 +14,7 @@ export default function Search({
  
   return (
     <form
-      className="relative mb-3 flex flex-1 shrink-0"
+      className="relative  flex flex-1 shrink-0"
       method="get"
       onSubmit={(e) => {
         e.preventDefault();
