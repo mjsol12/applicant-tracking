@@ -31,11 +31,19 @@ cp .env.example .env
 
 NOTE: this keys are generated and provided from appwrite.
 
+GENERATE: COPY MY KEY [DOCS ENV](https://docs.google.com/document/d/15P_qzQ8g0w8pMYJ_U7_CCE7xK1m9cbTMXnfyu4gv_YU/edit?usp=sharing), This is not proper way on giving keys but tokens has expiration so this good for testing.
+
+IF you want to access my appwrite, let me know I'll give you credentails.
+
 ```env
-NEXT_PUBLIC_APPWRITE_ENDPOINT=
-NEXT_PUBLIC_APPWRITE_PROJECT_ID=
-NEXT_PUBLIC_APPWRITE_DATABASE_ID=
-NEXT_PUBLIC_APPWRITE_DATABASE_ID=
+NEXT_PUBLIC_APPWRITE_PROJECT_ID = ""
+NEXT_PUBLIC_APPWRITE_PROJECT_NAME = ""
+NEXT_PUBLIC_APPWRITE_ENDPOINT = ""
+NEXT_PUBLIC_APPWRITE_DATABASE_ID = ""
+NEXT_PUBLIC_APPWRITE_APPLICANT_COLLECTION_ID = ""
+NEXT_PUBLIC_APPWRITE_INTERVIEW_COLLECTION_ID = ""
+NEXT_SECRET_APPWRITE_API_KEY = ""
+NEXT_SECRET_KEY = ""
 ```
 
 4. Start dev server:
