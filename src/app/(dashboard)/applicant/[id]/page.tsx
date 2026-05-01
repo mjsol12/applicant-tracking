@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 
 import { getLoggedInUser } from "@/lib/appwrite-server";
 import { Button } from "@/components/ui/button";
+import { formatDisplayValue, formatFieldValue } from "@/lib/utils";
 
 import { loadApplicant } from "../load-applicant";
 
@@ -25,12 +26,12 @@ type InterviewListResult = {
   total: number;
 };
 
-function formatValue(value: unknown): string {
-  if (value == null || value === "") return "—";
-  if (Array.isArray(value)) return value.join(", ");
-  if (typeof value === "object") return JSON.stringify(value);
-  return String(value);
-}
+const DATE_FIELDS = new Set([
+  "$createdAt",
+  "$updatedAt",
+  "scheduledAt",
+  "availableStartDate",
+]);
 
 const FIELD_LABELS: Record<string, string> = {
   fullName: "Full Name",
@@ -127,7 +128,7 @@ export default async function ApplicantDetailsPage({ params }: Props) {
                   {FIELD_LABELS[key] ?? key}
                 </dt>
                 <dd className="tablet:col-span-2 break-words">
-                  {formatValue(row[key])}
+                  {formatFieldValue(key, row[key], DATE_FIELDS)}
                 </dd>
               </div>
             ))}
@@ -155,17 +156,17 @@ export default async function ApplicantDetailsPage({ params }: Props) {
                 <li key={interview.$id} className="space-y-1 p-4 text-sm">
                   <p>
                     <span className="font-medium">Interviewer:</span>{" "}
-                    {formatValue(interview.interviewerId)}
+                    {formatDisplayValue(interview.interviewerId)}
                   </p>
                   <p>
-                    <span className="font-medium">Status:</span> {formatValue(interview.status)}
+                    <span className="font-medium">Status:</span> {formatDisplayValue(interview.status)}
                   </p>
                   <p>
                     <span className="font-medium">Scheduled At:</span>{" "}
-                    {formatValue(interview.scheduledAt)}
+                    {formatFieldValue("scheduledAt", interview.scheduledAt, DATE_FIELDS)}
                   </p>
                   <p>
-                    <span className="font-medium">Notes:</span> {formatValue(interview.notes)}
+                    <span className="font-medium">Notes:</span> {formatDisplayValue(interview.notes)}
                   </p>
                 </li>
               ))}

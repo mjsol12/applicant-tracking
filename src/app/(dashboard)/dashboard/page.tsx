@@ -1,4 +1,5 @@
 import { getLoggedInUser } from "@/lib/appwrite-server";
+import { formatFieldValue } from "@/lib/utils";
 import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -62,6 +63,7 @@ export default async function DashboardPage() {
   }
 
   const dashboardData = await getDashboardData();
+  const DATE_FIELDS = new Set(["scheduledAt"]);
 
   return (
     <div className="space-y-6 px-4 py-4">
@@ -120,7 +122,7 @@ export default async function DashboardPage() {
                   <p className="text-xs text-muted-foreground">{interview.status ?? "N/A"}</p>
                 </div>
                 <div className="text-right text-xs text-muted-foreground">
-                  <p>{interview.scheduledAt ?? "No schedule"}</p>
+                  <p>{formatFieldValue("scheduledAt", interview.scheduledAt, DATE_FIELDS)}</p>
                 </div>
               </li>
             ))}
