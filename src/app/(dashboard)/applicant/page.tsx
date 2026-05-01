@@ -28,7 +28,11 @@ function ApplicantTableSkeleton() {
   );
 }
 
-async function getData(search?: string): Promise<ApplicantResult> {
+async function getData(params: {
+  search?: string;
+  cursor?: string;
+  direction?: string;
+}): Promise<ApplicantResult> {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
   const proto = h.get("x-forwarded-proto") ?? "http";
@@ -38,9 +42,13 @@ async function getData(search?: string): Promise<ApplicantResult> {
     .map((c) => `${c.name}=${c.value}`)
     .join("; ");
 
-  const apiUrl = search
-    ? `${proto}://${host}/api/data/applicant?search=${encodeURIComponent(search)}`
-    : `${proto}://${host}/api/data/applicant`;
+  const qs = new URLSearchParams();
+  if (params.search) qs.set("search", params.search);
+  if (params.cursor) qs.set("cursor", params.cursor);
+  if (params.direction) qs.set("direction", params.direction);
+
+  const query = qs.toString();
+  const apiUrl = `${proto}://${host}/api/data/applicant${query ? `?${query}` : ""}`;
 
   const res = await fetch(apiUrl, {
     headers: cookieHeader ? { cookie: cookieHeader } : {},
@@ -61,15 +69,19 @@ async function getData(search?: string): Promise<ApplicantResult> {
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string }>;
+  searchParams: Promise<{
+    search?: string;
+    cursor?: string;
+    direction?: string;
+  }>;
 }) {
   const user = await getLoggedInUser();
   if (!user) {
     redirect("/login");
   }
 
-  const { search } = await searchParams;
-  const data = await getData(search);
+  const { search, cursor, direction } = await searchParams;
+  const data = await getData({ search, cursor, direction });
 
   return (
     <>

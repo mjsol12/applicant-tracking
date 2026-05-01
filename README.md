@@ -81,16 +81,26 @@ src/
 ├── lib/                       # Appwrite client, errors, shared utils
 └── types/                     # Shared enums/types
 ```
-
-## Database
-
-See [Database setup and route mapping](./docs/DATABASE.md).
-
 ## Deployment
 
 - Deployed under Appwrite Deployments.
 - Ensure all `NEXT_PUBLIC_APPWRITE_*` variables are set in your deployment environment.
 - This project is dependency-managed with `pnpm` (`pnpm-lock.yaml`), so use pnpm in CI/build where possible.
+
+
+See also:
+
+- [Database setup and route mapping](./docs/DATABASE.md)
+- [Challenges while building this](./docs/CHALLENGES.md)
+
+## API integration (Appwrite)
+
+The app talks to Appwrite through Next.js route handlers under `src/app/api`.
+
+- **Auth**: session is stored in an HTTP-only cookie and reused by server routes via `createSessionClient()` in `src/lib/appwrite-server.ts`.
+- **Data access**: applicants and interviews are read and written with Appwrite TablesDB (`listRows`, `getRow`, `createRow`, `updateRow`, `deleteRow`) from `src/app/api/data/*`.
+- **Queries**: list endpoints support search, filters, sorting, and cursor pagination where implemented (see `docs/DATABASE.md` for field-level details).
+- **CRUD**: full create, read, update, and delete flows are exposed for applicants; interviews support create and list/read patterns used by the UI.
 
 ## License
 

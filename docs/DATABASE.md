@@ -80,7 +80,8 @@ File: `src/app/api/data/applicant/route.ts`
 
 - `GET` list:
   - search: `search` -> `Query.search("fullName", search)`
-  - pagination: `cursor` + `diretion` (`next` uses `cursorAfter`, else `cursorBefore`)
+  - pagination: `cursor` + `direction` (`next` uses `cursorAfter`, otherwise `cursorBefore`)
+    - backwards compatible aliases: `direct`, `diretion` (same meaning as `direction`)
   - default sort: `Query.orderDesc("$createdAt")`
   - default limit: `10`
 - `GET ?rowId=...`: fetch single applicant row

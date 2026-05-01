@@ -59,11 +59,14 @@ export const GET = withErrorHandling(async (request: Request) => {
   queries.push(Query.limit(10));
   queries.push(Query.orderDesc("$createdAt"));
 
-  const direction = url.searchParams.get("diretion");
+  const paginationDirection =
+    url.searchParams.get("direction") ??
+    url.searchParams.get("direct") ??
+    url.searchParams.get("diretion");
   const cursor = url.searchParams.get("cursor");
 
   if (cursor) {
-    if (direction === "next") {
+    if (paginationDirection === "next") {
       queries.push(Query.cursorAfter(cursor));
     } else {
       queries.push(Query.cursorBefore(cursor));
@@ -92,7 +95,7 @@ export const GET = withErrorHandling(async (request: Request) => {
 
   const nextCursor = result.rows[result.rows.length - 1].$id;
 
-  const previousCursor = result.rows[0].$id;
+  const previousCursor = cursor ? result.rows[0].$id : null;
 
   return NextResponse.json({
     rows: result.rows,

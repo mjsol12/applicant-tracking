@@ -55,7 +55,10 @@ export function DataTable({ columns, data }: DataTableProps) {
     if (!cursor) return;
 
     const params = new URLSearchParams(searchParams.toString());
-    params.set("direct", direction);
+    for (const key of ["cursor", "direction", "direct", "diretion"]) {
+      params.delete(key);
+    }
+    params.set("direction", direction);
     params.set("cursor", cursor);
 
     const nextUrl = params.toString()
