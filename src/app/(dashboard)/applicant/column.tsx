@@ -1,6 +1,7 @@
 "use client"
 
 import type { ColumnDef } from "@tanstack/react-table"
+import Link from "next/link"
 
 
 // This type is used to define the shape of our data.
@@ -66,5 +67,17 @@ export const columns: ColumnDef<Applicant>[] = [
   {
     accessorKey: "availableStartDate",
     header: "Available Start",
+  },
+  {
+    id: "actions",
+    header: "",
+    cell: ({ row }) => (
+      <Link
+        href={`/applicant/${row.original.$id}/edit`}
+        className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+      >
+        Edit
+      </Link>
+    ),
   },
 ]
