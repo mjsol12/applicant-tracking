@@ -4,18 +4,19 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { APPLICANT_STATUS } from "@/types/enum";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const fieldClass =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
 
 const labelClass = "mb-1 block text-sm font-medium text-foreground";
 
+const SKILLS_PLACEHOLDER = "React, TypeScript\nSQL";
+
 function parseSkills(raw: string): string[] {
   const value = raw.trim();
   if (!value) return [];
 
-  // Allow JSON input like ["React","TypeScript"].
   if (value.startsWith("[")) {
     try {
       const parsed: unknown = JSON.parse(value);
@@ -25,7 +26,7 @@ function parseSkills(raw: string): string[] {
           .filter(Boolean);
       }
     } catch {
-      // Fall back to comma/newline parsing below.
+      // fall through
     }
   }
 
@@ -41,62 +42,132 @@ function datetimeLocalToIso(value: string): string | undefined {
   return Number.isNaN(d.getTime()) ? undefined : d.toISOString();
 }
 
-export function NewApplicantForm() {
+function formatDateInput(value: unknown): string {
+  const s = String(value ?? "").trim();
+  if (!s) return "";
+  if (s.length >= 10 && s[4] === "-" && s[7] === "-") {
+    return s.slice(0, 10);
+  }
+  if (s.includes("T")) {
+    return s.slice(0, 10);
+  }
+  return s;
+}
+
+function skillsToTextarea(value: unknown): string {
+  if (Array.isArray(value)) {
+    return value.map(String).join("\n");
+  }
+  return String(value ?? "");
+}
+
+function safeNumber(value: unknown, fallback = 0): number {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+type ExtractResult =
+  | { ok: true; data: Record<string, unknown> }
+  | { ok: false; error: string };
+
+function extractApplicantPayload(
+  fd: FormData,
+  options: { statusFallback: string; includeOptionalCreatedAt: boolean }
+): ExtractResult {
+  const yearsOfExperience = Number(fd.get("yearsOfExperience"));
+  const expectedSalary = Number(fd.get("expectedSalary"));
+  if (!Number.isFinite(yearsOfExperience) || yearsOfExperience < 0) {
+    return { ok: false, error: "Years of experience must be a valid number." };
+  }
+  if (!Number.isFinite(expectedSalary) || expectedSalary < 0) {
+    return { ok: false, error: "Expected salary must be a valid number." };
+  }
+
+  const skillsRaw = String(fd.get("skills") ?? "");
+  const skills = parseSkills(skillsRaw);
+
+  const data: Record<string, unknown> = {
+    fullName: String(fd.get("fullName") ?? "").trim(),
+    email: String(fd.get("email") ?? "").trim(),
+    phone: String(fd.get("phone") ?? "").trim(),
+    appliedRole: String(fd.get("appliedRole") ?? "").trim(),
+    yearsOfExperience,
+    status: String(fd.get("status") ?? options.statusFallback),
+    expectedSalary,
+    availableStartDate: String(fd.get("availableStartDate") ?? "").trim(),
+    skills,
+    notes: String(fd.get("notes") ?? "").trim(),
+  };
+
+  if (!data.fullName || !data.email) {
+    return { ok: false, error: "Full name and email are required." };
+  }
+
+  if (options.includeOptionalCreatedAt) {
+    const createdAtLocal = String(fd.get("createdAt") ?? "");
+    const createdAt = datetimeLocalToIso(createdAtLocal);
+    if (createdAt) {
+      data.createdAt = createdAt;
+    }
+  }
+
+  return { ok: true, data };
+}
+
+type ApplicantFormProps =
+  | { mode: "create" }
+  | { mode: "edit"; rowId: string; initialRow: Record<string, unknown> };
+
+function ApplicantForm(props: ApplicantFormProps) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const mode = props.mode;
+  const idPrefix = mode === "edit" ? "edit-" : "";
+  const id = (suffix: string) => `${idPrefix}${suffix}`;
+
+  const row = mode === "edit" ? props.initialRow : null;
+  const formKey = mode === "edit" ? props.rowId : "create";
+
+  const { statusValue, statusExtra } = useMemo(() => {
+    if (mode === "edit" && row) {
+      const sv = String(row.status ?? APPLICANT_STATUS[0]);
+      const extra = !(APPLICANT_STATUS as readonly string[]).includes(sv)
+        ? sv
+        : null;
+      return { statusValue: sv, statusExtra: extra };
+    }
+    return { statusValue: APPLICANT_STATUS[0], statusExtra: null as string | null };
+  }, [mode, row]);
+
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
-    const form = e.currentTarget;
-    const fd = new FormData(form);
+    const fd = new FormData(e.currentTarget);
 
-    const yearsOfExperience = Number(fd.get("yearsOfExperience"));
-    const expectedSalary = Number(fd.get("expectedSalary"));
-    if (!Number.isFinite(yearsOfExperience) || yearsOfExperience < 0) {
-      setError("Years of experience must be a valid number.");
-      return;
-    }
-    if (!Number.isFinite(expectedSalary) || expectedSalary < 0) {
-      setError("Expected salary must be a valid number.");
-      return;
-    }
-
-    const skillsRaw = String(fd.get("skills") ?? "");
-    const skills = parseSkills(skillsRaw);
-    const createdAtLocal = String(fd.get("createdAt") ?? "");
-    const createdAt = datetimeLocalToIso(createdAtLocal);
-
-    const data: Record<string, unknown> = {
-      fullName: String(fd.get("fullName") ?? "").trim(),
-      email: String(fd.get("email") ?? "").trim(),
-      phone: String(fd.get("phone") ?? "").trim(),
-      appliedRole: String(fd.get("appliedRole") ?? "").trim(),
-      yearsOfExperience,
-      status: String(fd.get("status") ?? "pending"),
-      expectedSalary,
-      availableStartDate: String(fd.get("availableStartDate") ?? "").trim(),
-      skills,
-      notes: String(fd.get("notes") ?? "").trim(),
-    };
-
-    if (createdAt) {
-      data.createdAt = createdAt;
-    }
-
-    if (!data.fullName || !data.email) {
-      setError("Full name and email are required.");
+    const extracted = extractApplicantPayload(fd, {
+      statusFallback: APPLICANT_STATUS[0],
+      includeOptionalCreatedAt: mode === "create",
+    });
+    if (!extracted.ok) {
+      setError(extracted.error);
       return;
     }
 
     setPending(true);
     try {
       const res = await fetch("/api/data/applicant", {
-        method: "POST",
+        method: mode === "create" ? "POST" : "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ data }),
+        body:
+          mode === "create"
+            ? JSON.stringify({ data: extracted.data })
+            : JSON.stringify({
+                rowId: props.rowId,
+                data: extracted.data,
+              }),
       });
       const json = (await res.json().catch(() => ({}))) as {
         error?: string;
@@ -114,8 +185,17 @@ export function NewApplicantForm() {
     }
   }
 
+  const submitLabel =
+    mode === "create"
+      ? pending
+        ? "Creating…"
+        : "Create applicant"
+      : pending
+        ? "Saving…"
+        : "Save changes";
+
   return (
-    <form className="mt-6 max-w-xl space-y-4" onSubmit={onSubmit}>
+    <form key={formKey} className="mt-6 max-w-xl space-y-4" onSubmit={onSubmit}>
       {error ? (
         <p className="rounded-md border border-destructive/50 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {error}
@@ -123,99 +203,106 @@ export function NewApplicantForm() {
       ) : null}
 
       <div>
-        <label className={labelClass} htmlFor="fullName">
+        <label className={labelClass} htmlFor={id("fullName")}>
           Full name
         </label>
         <input
           required
           className={fieldClass}
-          id="fullName"
+          id={id("fullName")}
           name="fullName"
           type="text"
           autoComplete="name"
+          defaultValue={row ? String(row.fullName ?? "") : ""}
         />
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="email">
+        <label className={labelClass} htmlFor={id("email")}>
           Email
         </label>
         <input
           required
           className={fieldClass}
-          id="email"
+          id={id("email")}
           name="email"
           type="email"
           autoComplete="email"
+          defaultValue={row ? String(row.email ?? "") : ""}
         />
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="phone">
+        <label className={labelClass} htmlFor={id("phone")}>
           Phone
         </label>
         <input
           className={fieldClass}
-          id="phone"
+          id={id("phone")}
           name="phone"
           type="tel"
           autoComplete="tel"
+          defaultValue={row ? String(row.phone ?? "") : ""}
         />
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="appliedRole">
+        <label className={labelClass} htmlFor={id("appliedRole")}>
           Applied role
         </label>
         <input
           className={fieldClass}
-          id="appliedRole"
+          id={id("appliedRole")}
           name="appliedRole"
           type="text"
+          defaultValue={row ? String(row.appliedRole ?? "") : ""}
         />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className={labelClass} htmlFor="yearsOfExperience">
+          <label className={labelClass} htmlFor={id("yearsOfExperience")}>
             Years of experience
           </label>
           <input
             className={fieldClass}
-            id="yearsOfExperience"
+            id={id("yearsOfExperience")}
             name="yearsOfExperience"
             type="number"
             min={0}
             step={1}
-            defaultValue={0}
+            defaultValue={row ? safeNumber(row.yearsOfExperience, 0) : 0}
           />
         </div>
         <div>
-          <label className={labelClass} htmlFor="expectedSalary">
+          <label className={labelClass} htmlFor={id("expectedSalary")}>
             Expected salary
           </label>
           <input
             className={fieldClass}
-            id="expectedSalary"
+            id={id("expectedSalary")}
             name="expectedSalary"
             type="number"
             min={0}
             step={1}
-            defaultValue={0}
+            defaultValue={row ? safeNumber(row.expectedSalary, 0) : 0}
           />
         </div>
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="status">
+        <label className={labelClass} htmlFor={id("status")}>
           Status
         </label>
         <select
           className={cn(fieldClass, "h-10")}
-          id="status"
+          id={id("status")}
           name="status"
-          defaultValue="pending"
+          defaultValue={statusValue}
         >
+          {statusExtra ? (
+            <option value={statusExtra}>{statusExtra}</option>
+          ) : null}
           {APPLICANT_STATUS.map((s) => (
             <option key={s} value={s}>
               {s}
@@ -225,43 +312,46 @@ export function NewApplicantForm() {
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="availableStartDate">
+        <label className={labelClass} htmlFor={id("availableStartDate")}>
           Available start date
         </label>
         <input
           className={fieldClass}
-          id="availableStartDate"
+          id={id("availableStartDate")}
           name="availableStartDate"
           type="date"
+          defaultValue={row ? formatDateInput(row.availableStartDate) : ""}
         />
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="skills">
+        <label className={labelClass} htmlFor={id("skills")}>
           Skills (comma or newline separated)
         </label>
         <textarea
           className={cn(fieldClass, "min-h-[100px] resize-y py-2")}
-          id="skills"
+          id={id("skills")}
           name="skills"
-          placeholder="React, TypeScript&#10;SQL"
+          placeholder={SKILLS_PLACEHOLDER}
+          defaultValue={row ? skillsToTextarea(row.skills) : ""}
         />
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="notes">
+        <label className={labelClass} htmlFor={id("notes")}>
           Notes
         </label>
         <textarea
           className={cn(fieldClass, "min-h-[80px] resize-y py-2")}
-          id="notes"
+          id={id("notes")}
           name="notes"
+          defaultValue={row ? String(row.notes ?? "") : ""}
         />
       </div>
 
       <div className="flex gap-3 pt-2">
         <Button disabled={pending} type="submit">
-          {pending ? "Creating…" : "Create applicant"}
+          {submitLabel}
         </Button>
         <Button
           disabled={pending}
@@ -274,4 +364,17 @@ export function NewApplicantForm() {
       </div>
     </form>
   );
+}
+
+export function NewApplicantForm() {
+  return <ApplicantForm mode="create" />;
+}
+
+export type EditApplicantFormProps = {
+  rowId: string;
+  row: Record<string, unknown>;
+};
+
+export function EditApplicantForm({ rowId, row }: EditApplicantFormProps) {
+  return <ApplicantForm mode="edit" rowId={rowId} initialRow={row} />;
 }
