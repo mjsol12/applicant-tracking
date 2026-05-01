@@ -54,6 +54,13 @@ pnpm dev
 
 5. Open `http://localhost:3000`
 
+6. Sign in:
+
+- Open `http://localhost:3000/login`
+- The email/password fields are **pre-filled for demo/local use**, so you can usually just click **Sign in**.
+
+See [Login notes (demo defaults + security)](./docs/LOGIN.md).
+
 ## Scripts
 
 - `pnpm dev` - Run development server
@@ -71,7 +78,8 @@ pnpm dev
 
 ```text
 docs/
-└── DATABASE.md                # Appwrite DB setup + route mapping
+├── DATABASE.md                # Appwrite DB setup + route mapping
+├── LOGIN.md                   # Login flow, demo accounts, security notes
 public/                        # Static assets (icons, images, placeholders)
 src/
 ├── app/
@@ -99,6 +107,7 @@ src/
 See also:
 
 - [Database setup and route mapping](./docs/DATABASE.md)
+- [Login notes (demo defaults + security)](./docs/LOGIN.md)
 - [Challenges while building this](./docs/CHALLENGES.md)
 
 ## API integration (Appwrite)
