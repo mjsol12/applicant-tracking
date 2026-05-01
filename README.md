@@ -30,6 +30,7 @@ cp .env.example .env
 3. Add Appwrite variables to `.env`:
 
 NOTE: this keys are generated and provided from appwrite.
+
 ```env
 NEXT_PUBLIC_APPWRITE_ENDPOINT=
 NEXT_PUBLIC_APPWRITE_PROJECT_ID=
@@ -80,7 +81,8 @@ src/
 ├── lib/                       # Appwrite client, errors, shared utils
 └── types/                     # Shared enums/types
 ```
-## Database 
+
+## Database
 
 See [Database setup and route mapping](./docs/DATABASE.md).
 

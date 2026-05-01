@@ -1,12 +1,11 @@
 "use client";
 
-import type { ColumnDef } from "@tanstack/react-table";
 import { format, isValid, parse, parseISO } from "date-fns";
-import Link from "next/link";
 import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
+import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -66,7 +65,7 @@ function ApplicantRowActions({ rowId }: { rowId: string }) {
     try {
       const res = await fetch(
         `/api/data/applicant?rowId=${encodeURIComponent(rowId)}`,
-        { method: "DELETE", credentials: "include" }
+        { method: "DELETE", credentials: "include" },
       );
       const json = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) {
@@ -132,7 +131,9 @@ export const columns: ColumnDef<Applicant>[] = [
             element.indeterminate = table.getIsSomePageRowsSelected();
           }
         }}
-        onChange={(event) => table.toggleAllPageRowsSelected(event.target.checked)}
+        onChange={(event) =>
+          table.toggleAllPageRowsSelected(event.target.checked)
+        }
         onClick={(event) => event.stopPropagation()}
         className="h-4 w-4 cursor-pointer accent-primary"
       />

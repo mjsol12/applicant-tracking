@@ -1,7 +1,6 @@
+import { notFound, redirect } from "next/navigation";
 import { EditApplicantForm } from "@/components/applicant-form";
 import { getLoggedInUser } from "@/lib/appwrite-server";
-import { notFound, redirect } from "next/navigation";
-
 import { ApplicantRouteDialog } from "../../../applicant-route-dialog";
 import { loadApplicant } from "../../../load-applicant";
 
@@ -23,10 +22,7 @@ export default async function InterceptEditApplicantPage({ params }: Props) {
   }
 
   return (
-    <ApplicantRouteDialog
-      closeMode="back"
-      title="Edit Applicant"
-    >
+    <ApplicantRouteDialog closeMode="back" title="Edit Applicant">
       <EditApplicantForm rowId={id} row={loaded.row} />
     </ApplicantRouteDialog>
   );

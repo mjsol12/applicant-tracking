@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn("bg-background font-sans", gabarito.variable)}>
         <div className="flex min-h-[100dvh]">
-            <div className="flex-grow overflow-auto">{children}</div>
+          <div className="flex-grow overflow-auto">{children}</div>
         </div>
       </body>
     </html>

@@ -1,9 +1,9 @@
 export const APPLICANT_STATUS = [
-    "applied",
-    "interview",
-    "hired",
-    "rejected",
-  ] as const;
+  "applied",
+  "interview",
+  "hired",
+  "rejected",
+] as const;
 
 export const INTERVIEW_STATUS = [
   "scheduled",

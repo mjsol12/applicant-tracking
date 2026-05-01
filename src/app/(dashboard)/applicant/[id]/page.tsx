@@ -1,11 +1,9 @@
-import Link from "next/link";
 import { cookies, headers } from "next/headers";
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-
-import { getLoggedInUser } from "@/lib/appwrite-server";
 import { Button } from "@/components/ui/button";
+import { getLoggedInUser } from "@/lib/appwrite-server";
 import { formatDisplayValue, formatFieldValue } from "@/lib/utils";
-
 import { loadApplicant } from "../load-applicant";
 
 type Props = {
@@ -63,7 +61,9 @@ const DISPLAY_ORDER = [
   "$updatedAt",
 ];
 
-async function getInterviewsByApplicant(applicantId: string): Promise<InterviewListResult> {
+async function getInterviewsByApplicant(
+  applicantId: string,
+): Promise<InterviewListResult> {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
   const proto = h.get("x-forwarded-proto") ?? "http";
@@ -113,7 +113,7 @@ export default async function ApplicantDetailsPage({ params }: Props) {
           <Button asChild variant="outline">
             <Link href="/applicant">Back</Link>
           </Button>
-          <Button asChild >
+          <Button asChild>
             <Link href={`/applicant/${id}/edit`}>Edit</Link>
           </Button>
         </div>
@@ -123,11 +123,14 @@ export default async function ApplicantDetailsPage({ params }: Props) {
         <div className="rounded-md border">
           <dl className="divide-y">
             {DISPLAY_ORDER.map((key) => (
-              <div key={key} className="grid grid-cols-1 gap-2 p-4 tablet:grid-cols-3">
+              <div
+                key={key}
+                className="grid grid-cols-1 gap-2 p-4 tablet:grid-cols-3"
+              >
                 <dt className="text-sm font-medium text-muted-foreground">
                   {FIELD_LABELS[key] ?? key}
                 </dt>
-                <dd className="tablet:col-span-2 break-words">
+                <dd className="break-words tablet:col-span-2">
                   {formatFieldValue(key, row[key], DATE_FIELDS)}
                 </dd>
               </div>
@@ -139,7 +142,9 @@ export default async function ApplicantDetailsPage({ params }: Props) {
           <div className="flex items-center justify-between gap-3 border-b p-4">
             <div>
               <h2 className="text-base font-semibold">Related Interviews</h2>
-              <p className="text-sm text-muted-foreground">Total: {interviews.total}</p>
+              <p className="text-sm text-muted-foreground">
+                Total: {interviews.total}
+              </p>
             </div>
             <Button asChild size="sm">
               <Link href={`/applicant/${encodeURIComponent(id)}/interview/new`}>
@@ -149,7 +154,9 @@ export default async function ApplicantDetailsPage({ params }: Props) {
           </div>
 
           {interviews.rows.length === 0 ? (
-            <p className="p-4 text-sm text-muted-foreground">No interviews assigned yet.</p>
+            <p className="p-4 text-sm text-muted-foreground">
+              No interviews assigned yet.
+            </p>
           ) : (
             <ul className="divide-y">
               {interviews.rows.map((interview) => (
@@ -159,14 +166,20 @@ export default async function ApplicantDetailsPage({ params }: Props) {
                     {formatDisplayValue(interview.interviewerId)}
                   </p>
                   <p>
-                    <span className="font-medium">Status:</span> {formatDisplayValue(interview.status)}
+                    <span className="font-medium">Status:</span>{" "}
+                    {formatDisplayValue(interview.status)}
                   </p>
                   <p>
                     <span className="font-medium">Scheduled At:</span>{" "}
-                    {formatFieldValue("scheduledAt", interview.scheduledAt, DATE_FIELDS)}
+                    {formatFieldValue(
+                      "scheduledAt",
+                      interview.scheduledAt,
+                      DATE_FIELDS,
+                    )}
                   </p>
                   <p>
-                    <span className="font-medium">Notes:</span> {formatDisplayValue(interview.notes)}
+                    <span className="font-medium">Notes:</span>{" "}
+                    {formatDisplayValue(interview.notes)}
                   </p>
                 </li>
               ))}

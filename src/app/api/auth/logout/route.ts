@@ -1,8 +1,7 @@
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-
-import { APPWRITE_SESSION_COOKIE } from "@/lib/auth-constants";
+import { NextResponse } from "next/server";
 import { createSessionClient } from "@/lib/appwrite-server";
+import { APPWRITE_SESSION_COOKIE } from "@/lib/auth-constants";
 
 export async function POST(request: Request) {
   const cookieStore = await cookies();

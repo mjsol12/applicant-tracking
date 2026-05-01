@@ -1,6 +1,5 @@
-import { ID, Query } from "node-appwrite";
 import { NextResponse } from "next/server";
-
+import { ID, Query } from "node-appwrite";
 import { createSessionClient } from "@/lib/appwrite-server";
 import { isPlainObject } from "@/lib/utils";
 import { withErrorHandling } from "@/lib/withErrorHandling";
@@ -10,11 +9,15 @@ type InterviewTable = { databaseId: string; tableId: string };
 
 function resolveInterviewTable(): InterviewTable | NextResponse {
   const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "";
-  const tableId = process.env.NEXT_PUBLIC_APPWRITE_INTERVIEW_COLLECTION_ID || "";
+  const tableId =
+    process.env.NEXT_PUBLIC_APPWRITE_INTERVIEW_COLLECTION_ID || "";
   if (!databaseId || !tableId) {
     return NextResponse.json(
-      { error: "Interview table is not configured (database or table id missing)." },
-      { status: 503 }
+      {
+        error:
+          "Interview table is not configured (database or table id missing).",
+      },
+      { status: 503 },
     );
   }
   return { databaseId, tableId };
@@ -78,7 +81,7 @@ export const GET = withErrorHandling(async (request: Request) => {
     if (!INTERVIEW_STATUS.includes(status as InterviewStatus)) {
       return NextResponse.json(
         { error: `status must be one of: ${INTERVIEW_STATUS.join(", ")}` },
-        { status: 400 }
+        { status: 400 },
       );
     }
     queries.push(Query.equal("status", [status]));
@@ -91,7 +94,8 @@ export const GET = withErrorHandling(async (request: Request) => {
 
   const limitRaw = url.searchParams.get("limit");
   const limit = limitRaw === null ? 10 : Number(limitRaw);
-  const safeLimit = Number.isFinite(limit) && limit > 0 ? Math.min(limit, 100) : 10;
+  const safeLimit =
+    Number.isFinite(limit) && limit > 0 ? Math.min(limit, 100) : 10;
   queries.push(Query.limit(safeLimit));
   queries.push(Query.orderDesc("$createdAt"));
 
@@ -148,7 +152,7 @@ export const POST = withErrorHandling(async (request: Request) => {
   if (!isPlainObject(body) || !("data" in body)) {
     return NextResponse.json(
       { error: "Expected JSON body with a data object" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -159,7 +163,10 @@ export const POST = withErrorHandling(async (request: Request) => {
 
   const assignmentValidationError = requireAssignmentFields(data);
   if (assignmentValidationError) {
-    return NextResponse.json({ error: assignmentValidationError }, { status: 400 });
+    return NextResponse.json(
+      { error: assignmentValidationError },
+      { status: 400 },
+    );
   }
 
   const id =

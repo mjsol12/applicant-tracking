@@ -1,4 +1,4 @@
-import { PersonStanding, type LucideIcon, Gauge } from "lucide-react";
+import { Gauge, type LucideIcon, PersonStanding } from "lucide-react";
 
 export type SiteConfig = typeof siteConfig;
 export type Navigation = {

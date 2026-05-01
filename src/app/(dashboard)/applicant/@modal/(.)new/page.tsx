@@ -1,5 +1,5 @@
-import { ApplicantRouteDialog } from "../../applicant-route-dialog";
 import { NewApplicantForm } from "@/components/applicant-form";
+import { ApplicantRouteDialog } from "../../applicant-route-dialog";
 
 export default function InterceptNewApplicantPage() {
   return (

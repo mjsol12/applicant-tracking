@@ -1,11 +1,11 @@
-import { DataTable } from "./data-table";
-import { columns, type ApplicantResult } from "./column";
-import { getLoggedInUser } from "@/lib/appwrite-server";
 import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import Search from "@/components/ui/search";
+import { getLoggedInUser } from "@/lib/appwrite-server";
+import { type ApplicantResult, columns } from "./column";
+import { DataTable } from "./data-table";
 
 function ApplicantTableSkeleton() {
   return (
@@ -17,7 +17,10 @@ function ApplicantTableSkeleton() {
       <div className="rounded-md border">
         <div className="space-y-3 p-4">
           {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="h-10 animate-pulse rounded-md bg-muted" />
+            <div
+              key={index}
+              className="h-10 animate-pulse rounded-md bg-muted"
+            />
           ))}
         </div>
       </div>
@@ -71,16 +74,19 @@ export default async function Page({
   return (
     <>
       <Suspense fallback={<ApplicantTableSkeleton />}>
-          <div className="flex flex-col gap-4 h-full">
-            <div className="flex items-center justify-between">
-              <Search placeholder="Search applicants" />
-              <Link href="/applicant/new" className="underline bg-blue-500 text-white px-4 py-2 rounded-md no-underline">
-                  Add new applicant
-              </Link>
-            </div>
-            <DataTable columns={columns} data={data} />
+        <div className="flex h-full flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <Search placeholder="Search applicants" />
+            <Link
+              href="/applicant/new"
+              className="rounded-md bg-blue-500 px-4 py-2 text-white underline no-underline"
+            >
+              Add new applicant
+            </Link>
           </div>
+          <DataTable columns={columns} data={data} />
+        </div>
       </Suspense>
     </>
-    );
-  }
+  );
+}

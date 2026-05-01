@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -39,7 +39,10 @@ export default function LoginPage() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md items-center px-6">
-      <form className="w-full space-y-4 rounded-lg border p-6" onSubmit={onSubmit}>
+      <form
+        className="w-full space-y-4 rounded-lg border p-6"
+        onSubmit={onSubmit}
+      >
         <h1 className="text-xl font-semibold">Sign in</h1>
         <div className="space-y-1">
           <label className="text-sm" htmlFor="email">

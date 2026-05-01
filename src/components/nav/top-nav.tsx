@@ -8,7 +8,10 @@ export default function TopNav({ title }: { title: string }) {
       <h1 className="text-2xl font-medium">{title}</h1>
       <div className="px-6 pt-4">
         <form action="/api/auth/logout" method="post">
-          <button className="rounded-md border px-3 py-1.5 text-sm" type="submit">
+          <button
+            className="rounded-md border px-3 py-1.5 text-sm"
+            type="submit"
+          >
             Logout
           </button>
         </form>

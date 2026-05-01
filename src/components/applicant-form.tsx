@@ -1,10 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { APPLICANT_STATUS } from "@/types/enum";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
 
 const fieldClass =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -21,9 +21,7 @@ function parseSkills(raw: string): string[] {
     try {
       const parsed: unknown = JSON.parse(value);
       if (Array.isArray(parsed)) {
-        return parsed
-          .map((s) => String(s).trim())
-          .filter(Boolean);
+        return parsed.map((s) => String(s).trim()).filter(Boolean);
       }
     } catch {
       // fall through
@@ -72,7 +70,7 @@ type ExtractResult =
 
 function extractApplicantPayload(
   fd: FormData,
-  options: { statusFallback: string; includeOptionalCreatedAt: boolean }
+  options: { statusFallback: string; includeOptionalCreatedAt: boolean },
 ): ExtractResult {
   const yearsOfExperience = Number(fd.get("yearsOfExperience"));
   const expectedSalary = Number(fd.get("expectedSalary"));
@@ -138,7 +136,10 @@ function ApplicantForm(props: ApplicantFormProps) {
         : null;
       return { statusValue: sv, statusExtra: extra };
     }
-    return { statusValue: APPLICANT_STATUS[0], statusExtra: null as string | null };
+    return {
+      statusValue: APPLICANT_STATUS[0],
+      statusExtra: null as string | null,
+    };
   }, [mode, row]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {

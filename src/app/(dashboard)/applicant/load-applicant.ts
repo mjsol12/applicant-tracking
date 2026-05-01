@@ -4,7 +4,9 @@ export type LoadApplicantResult =
   | { ok: true; row: Record<string, unknown> }
   | { ok: false; reason: "unauthorized" | "not_found" };
 
-export async function loadApplicant(rowId: string): Promise<LoadApplicantResult> {
+export async function loadApplicant(
+  rowId: string,
+): Promise<LoadApplicantResult> {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
   const proto = h.get("x-forwarded-proto") ?? "http";
@@ -19,7 +21,7 @@ export async function loadApplicant(rowId: string): Promise<LoadApplicantResult>
     {
       headers: cookieHeader ? { cookie: cookieHeader } : {},
       cache: "no-store",
-    }
+    },
   );
 
   if (res.status === 401) {

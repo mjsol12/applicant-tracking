@@ -1,8 +1,8 @@
-import { getLoggedInUser } from "@/lib/appwrite-server";
-import { formatFieldValue } from "@/lib/utils";
 import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getLoggedInUser } from "@/lib/appwrite-server";
+import { formatFieldValue } from "@/lib/utils";
 
 type ApplicantStatus = "applied" | "interview" | "hired" | "rejected";
 
@@ -72,17 +72,21 @@ export default async function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-md border p-4">
           <p className="text-sm text-muted-foreground">Total applicants</p>
-          <p className="mt-2 text-2xl font-semibold">{dashboardData.totalApplicants}</p>
+          <p className="mt-2 text-2xl font-semibold">
+            {dashboardData.totalApplicants}
+          </p>
         </div>
 
-        {Object.entries(dashboardData.applicantsPerStatus).map(([status, count]) => (
-          <div key={status} className="rounded-md border p-4">
-            <p className="text-sm text-muted-foreground">
-              {statusLabelMap[status as ApplicantStatus]}
-            </p>
-            <p className="mt-2 text-2xl font-semibold">{count}</p>
-          </div>
-        ))}
+        {Object.entries(dashboardData.applicantsPerStatus).map(
+          ([status, count]) => (
+            <div key={status} className="rounded-md border p-4">
+              <p className="text-sm text-muted-foreground">
+                {statusLabelMap[status as ApplicantStatus]}
+              </p>
+              <p className="mt-2 text-2xl font-semibold">{count}</p>
+            </div>
+          ),
+        )}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -99,10 +103,16 @@ export default async function DashboardPage() {
                   className="flex items-center justify-between px-3 py-2"
                 >
                   <div>
-                    <p className="text-sm font-medium">{applicant.fullName ?? "Unknown"}</p>
-                    <p className="text-xs text-muted-foreground">{applicant.appliedRole ?? "N/A"}</p>
+                    <p className="text-sm font-medium">
+                      {applicant.fullName ?? "Unknown"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {applicant.appliedRole ?? "N/A"}
+                    </p>
                   </div>
-                  <p className="text-xs text-muted-foreground">{applicant.status ?? "N/A"}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {applicant.status ?? "N/A"}
+                  </p>
                 </Link>
               </li>
             ))}
@@ -118,11 +128,21 @@ export default async function DashboardPage() {
                 className="flex items-center justify-between rounded-md border px-3 py-2"
               >
                 <div>
-                  <p className="text-sm font-medium">{interview.applicantId ?? "Unknown applicant"}</p>
-                  <p className="text-xs text-muted-foreground">{interview.status ?? "N/A"}</p>
+                  <p className="text-sm font-medium">
+                    {interview.applicantId ?? "Unknown applicant"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {interview.status ?? "N/A"}
+                  </p>
                 </div>
                 <div className="text-right text-xs text-muted-foreground">
-                  <p>{formatFieldValue("scheduledAt", interview.scheduledAt, DATE_FIELDS)}</p>
+                  <p>
+                    {formatFieldValue(
+                      "scheduledAt",
+                      interview.scheduledAt,
+                      DATE_FIELDS,
+                    )}
+                  </p>
                 </div>
               </li>
             ))}

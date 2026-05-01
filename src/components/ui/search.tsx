@@ -1,20 +1,16 @@
-'use client';
- 
+"use client";
+
 import { SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
- 
-export default function Search({
-  placeholder,
-}: {
-  placeholder: string;
-}) {
+
+export default function Search({ placeholder }: { placeholder: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
- 
+
   return (
     <form
-      className="relative  flex flex-1 shrink-0"
+      className="relative flex flex-1 shrink-0"
       method="get"
       onSubmit={(e) => {
         e.preventDefault();

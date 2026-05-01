@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { INTERVIEW_STATUS } from "@/types/enum";
@@ -127,7 +126,12 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
         <label className={labelClass} htmlFor="status">
           Status
         </label>
-        <select className={cn(fieldClass, "h-10")} id="status" name="status" defaultValue={INTERVIEW_STATUS[0]}>
+        <select
+          className={cn(fieldClass, "h-10")}
+          id="status"
+          name="status"
+          defaultValue={INTERVIEW_STATUS[0]}
+        >
           {INTERVIEW_STATUS.map((s) => (
             <option key={s} value={s}>
               {s}
@@ -140,14 +144,23 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
         <label className={labelClass} htmlFor="scheduledAt">
           Scheduled at
         </label>
-        <input className={fieldClass} id="scheduledAt" name="scheduledAt" type="datetime-local" />
+        <input
+          className={fieldClass}
+          id="scheduledAt"
+          name="scheduledAt"
+          type="datetime-local"
+        />
       </div>
 
       <div>
         <label className={labelClass} htmlFor="notes">
           Notes
         </label>
-        <textarea className={cn(fieldClass, "min-h-[90px] resize-y py-2")} id="notes" name="notes" />
+        <textarea
+          className={cn(fieldClass, "min-h-[90px] resize-y py-2")}
+          id="notes"
+          name="notes"
+        />
       </div>
 
       <div className="flex gap-3 pt-2">
