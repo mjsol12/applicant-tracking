@@ -61,16 +61,28 @@ pnpm dev
 ## Project Structure
 
 ```text
+docs/
+└── DATABASE.md                # Appwrite DB setup + route mapping
+public/                        # Static assets (icons, images, placeholders)
 src/
-├── app/               # App Router pages
-├── components/        # UI and chart components
-├── config/            # Config files
-├── data/              # Mock/sample data
-├── hooks/             # Custom React hooks
-├── lib/               # Utilities and Appwrite client
-├── style/             # Global styles
-└── types/             # Type definitions
+├── app/
+│   ├── (dashboard)/           # Protected dashboard/applicant routes
+│   ├── api/
+│   │   ├── auth/              # Login/logout route handlers
+│   │   └── data/              # Applicant/interview/dashboard APIs
+│   ├── login/                 # Login page
+│   └── layout.tsx             # App root layout
+├── components/
+│   ├── nav/                   # Top/side navigation components
+│   ├── ui/                    # Reusable UI primitives
+│   ├── applicant-form.tsx
+│   └── interview-form.tsx
+├── lib/                       # Appwrite client, errors, shared utils
+└── types/                     # Shared enums/types
 ```
+## Database 
+
+See [Database setup and route mapping](./docs/DATABASE.md).
 
 ## Deployment
 
