@@ -55,7 +55,7 @@ export default async function Page({
   return (
     <>
       <Suspense fallback={<div>Loading data...</div>}>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 h-full">
             <div className="flex items-center justify-between">
               <Search placeholder="Search applicants" />
               <Link href="/applicant/new" className="underline bg-blue-500 text-white px-4 py-2 rounded-md no-underline">

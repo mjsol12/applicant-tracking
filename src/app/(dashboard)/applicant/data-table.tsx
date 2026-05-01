@@ -64,8 +64,9 @@ export function DataTable({ columns, data }: DataTableProps) {
     router.replace(nextUrl)
   }
 
-  return (<div>
-    <div className="overflow-hidden rounded-md border">
+  return (
+  <div className="flex-1 flex flex-col">
+    <div className="overflow-hidden rounded-md border flex-1">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
