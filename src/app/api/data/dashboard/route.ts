@@ -45,7 +45,7 @@ export const GET = withErrorHandling(async (_request: Request) => {
   const { tablesDB } = await createSessionClient();
 
   
-  const [applicantsResult,  recentApplicants, ...statusResults] = await Promise.all([
+  const [applicantsResult,  recentApplicants, loadInterview, ...statusResults] = await Promise.all([
     tablesDB.listRows({
       databaseId: applicantTable.databaseId,
       tableId: applicantTable.tableId,
@@ -58,6 +58,12 @@ export const GET = withErrorHandling(async (_request: Request) => {
       queries: [Query.equal("status", ['applied']), Query.limit(5), Query.orderDesc("$createdAt")],
       ttl: 0,
     }),
+    tablesDB.listRows({
+      databaseId: interviewTable.databaseId,
+      tableId: interviewTable.tableId,
+      queries: [],
+      ttl: 0,
+    }),
     ...APPLICANT_STATUS.map((status) =>
           tablesDB.listRows({
             databaseId: applicantTable.databaseId,
@@ -67,14 +73,6 @@ export const GET = withErrorHandling(async (_request: Request) => {
           }),
         ),
   ]);
-
-  const loadInterview  =  await tablesDB.listRows({
-    databaseId: interviewTable.databaseId,
-    tableId: interviewTable.tableId,
-    queries: [],
-    ttl: 0,
-  });
-
 
   const applicantsPerStatus = APPLICANT_STATUS.reduce<Record<string, number>>(
     (acc, status, index) => {
@@ -88,6 +86,6 @@ export const GET = withErrorHandling(async (_request: Request) => {
     totalApplicants: applicantsResult.total,
     applicantsPerStatus,
     recentApplicants: recentApplicants.rows,
-    upcomingInterviews:  loadInterview.rows,
+    upcomingInterviews: loadInterview.rows,
   });
 });
