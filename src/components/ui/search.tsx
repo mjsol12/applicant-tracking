@@ -22,13 +22,10 @@ export default function Search({
         const search = String(formData.get("search") ?? "").trim();
         if (search.length > 0 && search.length < 3) return;
 
-        const params = new URLSearchParams(searchParams.toString());
-        if (search) {
-          params.set("search", search);
-        } else {
-          params.delete("search");
-        }
-        const nextUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+        // Reset URL params on search submit; keep only `search`.
+        const params = new URLSearchParams();
+        params.set("search", search);
+        const nextUrl = `${pathname}?${params.toString()}`;
         router.replace(nextUrl);
       }}
     >
