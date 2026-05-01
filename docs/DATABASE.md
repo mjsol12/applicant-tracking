@@ -80,6 +80,7 @@ File: `src/app/api/data/applicant/route.ts`
 
 - `GET` list:
   - search: `search` -> `Query.search("fullName", search)`
+  - filter: `status` -> `Query.equal("status", [status])` (must be one of `APPLICANT_STATUS`)
   - pagination: `cursor` + `direction` (`next` uses `cursorAfter`, otherwise `cursorBefore`)
     - backwards compatible aliases: `direct`, `diretion` (same meaning as `direction`)
   - default sort: `Query.orderDesc("$createdAt")`

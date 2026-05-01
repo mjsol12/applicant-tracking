@@ -10,7 +10,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
 
   return (
     <form
-      className="relative flex flex-1 shrink-0"
+      className="relative flex w-full max-w-sm shrink-0"
       method="get"
       onSubmit={(e) => {
         e.preventDefault();
@@ -18,10 +18,20 @@ export default function Search({ placeholder }: { placeholder: string }) {
         const search = String(formData.get("search") ?? "").trim();
         if (search.length > 0 && search.length < 3) return;
 
-        // Reset URL params on search submit; keep only `search`.
-        const params = new URLSearchParams();
-        params.set("search", search);
-        const nextUrl = `${pathname}?${params.toString()}`;
+        const params = new URLSearchParams(searchParams.toString());
+
+        for (const key of ["cursor", "direction", "direct", "diretion"]) {
+          params.delete(key);
+        }
+
+        if (!search) {
+          params.delete("search");
+        } else {
+          params.set("search", search);
+        }
+
+        const qs = params.toString();
+        const nextUrl = qs ? `${pathname}?${qs}` : pathname;
         router.replace(nextUrl);
       }}
     >
@@ -30,7 +40,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
       </label>
       <input
         id="search"
-        className="peer block w-full max-w-sm rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
         placeholder={placeholder}
         name="search"
         defaultValue={searchParams.get("search") ?? ""}

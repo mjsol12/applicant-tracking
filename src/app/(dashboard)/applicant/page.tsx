@@ -6,6 +6,7 @@ import Search from "@/components/ui/search";
 import { getLoggedInUser } from "@/lib/appwrite-server";
 import { type ApplicantResult, columns } from "./column";
 import { DataTable } from "./data-table";
+import { ApplicantStatusFilter } from "./status-filter";
 
 function ApplicantTableSkeleton() {
   return (
@@ -30,6 +31,7 @@ function ApplicantTableSkeleton() {
 
 async function getData(params: {
   search?: string;
+  status?: string;
   cursor?: string;
   direction?: string;
 }): Promise<ApplicantResult> {
@@ -44,6 +46,7 @@ async function getData(params: {
 
   const qs = new URLSearchParams();
   if (params.search) qs.set("search", params.search);
+  if (params.status) qs.set("status", params.status);
   if (params.cursor) qs.set("cursor", params.cursor);
   if (params.direction) qs.set("direction", params.direction);
 
@@ -71,6 +74,7 @@ export default async function Page({
 }: {
   searchParams: Promise<{
     search?: string;
+    status?: string;
     cursor?: string;
     direction?: string;
   }>;
@@ -80,15 +84,18 @@ export default async function Page({
     redirect("/login");
   }
 
-  const { search, cursor, direction } = await searchParams;
-  const data = await getData({ search, cursor, direction });
+  const { search, status, cursor, direction } = await searchParams;
+  const data = await getData({ search, status, cursor, direction });
 
   return (
     <>
       <Suspense fallback={<ApplicantTableSkeleton />}>
         <div className="flex h-full flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <Search placeholder="Search applicants" />
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-4">
+              <Search placeholder="Search applicants" />
+              <ApplicantStatusFilter />
+            </div>
             <Link
               href="/applicant/new"
               className="rounded-md bg-blue-500 px-4 py-2 text-white underline no-underline"

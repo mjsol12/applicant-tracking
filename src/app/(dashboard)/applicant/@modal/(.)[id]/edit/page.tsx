@@ -23,7 +23,11 @@ export default async function InterceptEditApplicantPage({ params }: Props) {
 
   return (
     <ApplicantRouteDialog closeMode="back" title="Edit Applicant">
-      <EditApplicantForm rowId={id} row={loaded.row} />
+      <EditApplicantForm
+        rowId={id}
+        row={loaded.row}
+        afterSubmitNavigate="back"
+      />
     </ApplicantRouteDialog>
   );
 }

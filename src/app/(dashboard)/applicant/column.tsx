@@ -14,13 +14,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { ApplicantStatus } from "@/types/enum";
 
 export type Applicant = {
   fullName: string;
   email: string;
   phone: string;
   address: string;
-  status: "submitted" | "pending" | "processing" | "success" | "failed";
+  status: ApplicantStatus | string;
   appliedRole: string;
   skills: string[];
   availableStartDate: string;

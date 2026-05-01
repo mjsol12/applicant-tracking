@@ -3,6 +3,7 @@ import { ID, Query } from "node-appwrite";
 import { createSessionClient } from "@/lib/appwrite-server";
 import { isPlainObject } from "@/lib/utils";
 import { withErrorHandling } from "@/lib/withErrorHandling";
+import { APPLICANT_STATUS, type ApplicantStatus } from "@/types/enum";
 
 type ApplicantTable = { databaseId: string; tableId: string };
 
@@ -54,6 +55,17 @@ export const GET = withErrorHandling(async (request: Request) => {
   const search = url.searchParams.get("search");
   if (search) {
     queries.push(Query.search("fullName", search));
+  }
+
+  const status = url.searchParams.get("status");
+  if (status) {
+    if (!APPLICANT_STATUS.includes(status as ApplicantStatus)) {
+      return NextResponse.json(
+        { error: `status must be one of: ${APPLICANT_STATUS.join(", ")}` },
+        { status: 400 },
+      );
+    }
+    queries.push(Query.equal("status", [status]));
   }
 
   queries.push(Query.limit(10));

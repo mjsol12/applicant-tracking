@@ -8,7 +8,7 @@ export default function InterceptNewApplicantPage() {
       title="New applicant"
       description="Fill in the details below. Skills can be separated by commas or new lines."
     >
-      <NewApplicantForm />
+      <NewApplicantForm afterSubmitNavigate="back" />
     </ApplicantRouteDialog>
   );
 }

@@ -94,7 +94,6 @@ function extractApplicantPayload(
     expectedSalary,
     availableStartDate: String(fd.get("availableStartDate") ?? "").trim(),
     skills,
-    notes: String(fd.get("notes") ?? "").trim(),
   };
 
   if (!data.fullName || !data.email) {
@@ -113,8 +112,13 @@ function extractApplicantPayload(
 }
 
 type ApplicantFormProps =
-  | { mode: "create" }
-  | { mode: "edit"; rowId: string; initialRow: Record<string, unknown> };
+  | { mode: "create"; afterSubmitNavigate?: "replace" | "back" }
+  | {
+      mode: "edit";
+      rowId: string;
+      initialRow: Record<string, unknown>;
+      afterSubmitNavigate?: "replace" | "back";
+    };
 
 function ApplicantForm(props: ApplicantFormProps) {
   const router = useRouter();
@@ -122,6 +126,7 @@ function ApplicantForm(props: ApplicantFormProps) {
   const [error, setError] = useState<string | null>(null);
 
   const mode = props.mode;
+  const afterSubmitNavigate = props.afterSubmitNavigate ?? "replace";
   const idPrefix = mode === "edit" ? "edit-" : "";
   const id = (suffix: string) => `${idPrefix}${suffix}`;
 
@@ -177,7 +182,11 @@ function ApplicantForm(props: ApplicantFormProps) {
         setError(json.error ?? `Request failed (${res.status})`);
         return;
       }
-      router.push("/applicant");
+      if (afterSubmitNavigate === "back") {
+        router.back();
+      } else {
+        router.replace("/applicant");
+      }
       router.refresh();
     } catch {
       setError("Network error. Try again.");
@@ -338,18 +347,6 @@ function ApplicantForm(props: ApplicantFormProps) {
         />
       </div>
 
-      <div>
-        <label className={labelClass} htmlFor={id("notes")}>
-          Notes
-        </label>
-        <textarea
-          className={cn(fieldClass, "min-h-[80px] resize-y py-2")}
-          id={id("notes")}
-          name="notes"
-          defaultValue={row ? String(row.notes ?? "") : ""}
-        />
-      </div>
-
       <div className="flex gap-3 pt-2">
         <Button disabled={pending} type="submit">
           {submitLabel}
@@ -367,15 +364,34 @@ function ApplicantForm(props: ApplicantFormProps) {
   );
 }
 
-export function NewApplicantForm() {
-  return <ApplicantForm mode="create" />;
+export function NewApplicantForm(props: {
+  afterSubmitNavigate?: "replace" | "back";
+}) {
+  return (
+    <ApplicantForm
+      mode="create"
+      afterSubmitNavigate={props.afterSubmitNavigate}
+    />
+  );
 }
 
 export type EditApplicantFormProps = {
   rowId: string;
   row: Record<string, unknown>;
+  afterSubmitNavigate?: "replace" | "back";
 };
 
-export function EditApplicantForm({ rowId, row }: EditApplicantFormProps) {
-  return <ApplicantForm mode="edit" rowId={rowId} initialRow={row} />;
+export function EditApplicantForm({
+  rowId,
+  row,
+  afterSubmitNavigate,
+}: EditApplicantFormProps) {
+  return (
+    <ApplicantForm
+      mode="edit"
+      rowId={rowId}
+      initialRow={row}
+      afterSubmitNavigate={afterSubmitNavigate}
+    />
+  );
 }
