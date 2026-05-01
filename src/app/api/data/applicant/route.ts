@@ -9,7 +9,7 @@ type ApplicantTable = { databaseId: string; tableId: string };
 
 function resolveApplicantTable(): ApplicantTable | NextResponse {
   const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "";
-  const tableId = process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID || "";
+  const tableId = process.env.NEXT_PUBLIC_APPWRITE_APPLICANT_COLLECTION_ID|| "";
   if (!databaseId || !tableId) {
     return NextResponse.json(
       { error: "Applicant table is not configured (database or table id missing)." },

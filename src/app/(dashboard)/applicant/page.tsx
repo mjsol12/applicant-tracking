@@ -50,8 +50,6 @@ export default async function Page({
   const { search } = await searchParams;
   const data = await getData(search);
 
-  console.log(data);
-
   return (
     <>
       <Suspense fallback={<div>Loading data...</div>}>
