@@ -1,29 +1,37 @@
 'use client';
  
 import { SearchIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
  
-export default function Search({ placeholder }: { placeholder: string }) {
-  const [value, setValue] = useState("");
-
-  function handleSearch(term: string) {
-    console.log("search", term);
-  }
-
-  useEffect(() => {
-    const trimmed = value.trim();
-    const shouldTrigger = trimmed.length >= 3 || trimmed.length === 0;
-    if (!shouldTrigger) return;
-
-    const timer = window.setTimeout(() => {
-      handleSearch(value);
-    }, 400);
-
-    return () => window.clearTimeout(timer);
-  }, [value]);
+export default function Search({
+  placeholder,
+}: {
+  placeholder: string;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
  
   return (
-    <div className="relative flex flex-1 shrink-0 mb-3">
+    <form
+      className="relative mb-3 flex flex-1 shrink-0"
+      method="get"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const search = String(formData.get("search") ?? "").trim();
+        if (search.length > 0 && search.length < 3) return;
+
+        const params = new URLSearchParams(searchParams.toString());
+        if (search) {
+          params.set("search", search);
+        } else {
+          params.delete("search");
+        }
+        const nextUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+        router.replace(nextUrl);
+      }}
+    >
       <label htmlFor="search" className="sr-only">
         Search
       </label>
@@ -31,12 +39,18 @@ export default function Search({ placeholder }: { placeholder: string }) {
         id="search"
         className="peer block w-full max-w-sm rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
         placeholder={placeholder}
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-        }}
+        name="search"
+        defaultValue={searchParams.get("search") ?? ""}
+        minLength={3}
+        title="Enter at least 3 characters (or clear to reset)"
       />
-      <SearchIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-    </div>
+      <button
+        type="submit"
+        aria-label="Submit search"
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 peer-focus:text-gray-900"
+      >
+        <SearchIcon className="h-[18px] w-[18px]" />
+      </button>
+    </form>
   );
 }

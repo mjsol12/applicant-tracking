@@ -5,8 +5,9 @@ import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import Search from "@/components/ui/search";
 
-async function getData(): Promise<ApplicantResult> {
+async function getData(search?: string): Promise<ApplicantResult> {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
   const proto = h.get("x-forwarded-proto") ?? "http";
@@ -16,7 +17,11 @@ async function getData(): Promise<ApplicantResult> {
     .map((c) => `${c.name}=${c.value}`)
     .join("; ");
 
-  const res = await fetch(`${proto}://${host}/api/data/applicant`, {
+  const apiUrl = search
+    ? `${proto}://${host}/api/data/applicant?search=${encodeURIComponent(search)}`
+    : `${proto}://${host}/api/data/applicant`;
+
+  const res = await fetch(apiUrl, {
     headers: cookieHeader ? { cookie: cookieHeader } : {},
     cache: "no-store",
   });
@@ -32,13 +37,20 @@ async function getData(): Promise<ApplicantResult> {
   return (await res.json()) as ApplicantResult;
 }
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ search?: string }>;
+}) {
   const user = await getLoggedInUser();
   if (!user) {
     redirect("/login");
   }
 
-  const data = await getData();
+  const { search } = await searchParams;
+  const data = await getData(search);
+
+  console.log(data);
 
   return (
     <>
@@ -50,6 +62,7 @@ export default async function Page() {
             </Link>
           </p>
           <div className="py-4 laptop:col-span-2">
+            <Search placeholder="Search applicants" />
             <DataTable columns={columns} data={data} />
           </div>
         </div>

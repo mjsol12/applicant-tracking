@@ -1,4 +1,4 @@
-import { AppwriteException, ID } from "node-appwrite";
+import { AppwriteException, ID, Query } from "node-appwrite";
 import { NextResponse } from "next/server";
 
 import { createSessionClient } from "@/lib/appwrite-server";
@@ -63,23 +63,13 @@ export async function GET(request: Request) {
       return NextResponse.json(row);
     }
 
-    let queries: string[] = [];
-    const queriesParam = url.searchParams.get("queries");
-    if (queriesParam) {
-      try {
-        const parsed: unknown = JSON.parse(queriesParam);
-        if (!Array.isArray(parsed) || !parsed.every((q) => typeof q === "string")) {
-          return NextResponse.json(
-            { error: "queries must be a JSON array of strings" },
-            { status: 400 }
-          );
-        }
-        queries = parsed;
-      } catch {
-        return NextResponse.json({ error: "Invalid queries JSON" }, { status: 400 });
-      }
-    }
+    const queries: string[] = [];
 
+    const search = url.searchParams.get("search");
+    if (search) {
+      queries.push(Query.search("fullName", search));
+    }
+    
     const total = url.searchParams.get("total") === "true";
     const ttlRaw = url.searchParams.get("ttl");
     const ttl = ttlRaw === null ? 0 : Number(ttlRaw);

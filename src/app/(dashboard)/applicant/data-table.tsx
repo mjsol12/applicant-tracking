@@ -49,18 +49,6 @@ export function DataTable({ columns, data }: DataTableProps) {
   });
 
   return (<div>
-      <div className="flex items-center py-4">
-        <input
-          className="max-w-lg p-3 w-full rounded-md border "
-          name="availableStartDate"
-          type="string"
-          placeholder="Filter names..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""} 
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-        />
-      </div>
     <div className="overflow-hidden rounded-md border">
       <Table>
         <TableHeader>
