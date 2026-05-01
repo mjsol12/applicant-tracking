@@ -10,7 +10,7 @@ export default function DashboardLayout({
       <SideNav />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopNav title="Applicant List" />
-        <main className="min-h-0 flex-1 p-5">
+        <main className="min-h-0 flex-1 p-5 overflow-auto">
           {children}
         </main>
       </div>

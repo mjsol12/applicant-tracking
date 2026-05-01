@@ -97,6 +97,10 @@ function ApplicantRowActions({ rowId }: { rowId: string }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
         <DropdownMenuItem asChild>
+          <Link href={`/applicant/${rowId}`}>View</Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
           <Link href={`/applicant/${rowId}/edit`}>Edit</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
