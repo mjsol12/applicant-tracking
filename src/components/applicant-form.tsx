@@ -64,6 +64,23 @@ function safeNumber(value: unknown, fallback = 0): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function isValidEmail(email: string): boolean {
+  if (!email) return false;
+  return EMAIL_RE.test(email);
+}
+
+function countPhoneDigits(phone: string): number {
+  return phone.replace(/\D/g, "").length;
+}
+
+function isValidIsoDateOnly(value: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const d = new Date(`${value}T00:00:00`);
+  return !Number.isNaN(d.getTime());
+}
+
 type ExtractResult =
   | { ok: true; data: Record<string, unknown> }
   | { ok: false; error: string };
@@ -77,8 +94,20 @@ function extractApplicantPayload(
   if (!Number.isFinite(yearsOfExperience) || yearsOfExperience < 0) {
     return { ok: false, error: "Years of experience must be a valid number." };
   }
+  if (!Number.isInteger(yearsOfExperience)) {
+    return { ok: false, error: "Years of experience must be a whole number." };
+  }
+  if (yearsOfExperience > 80) {
+    return { ok: false, error: "Years of experience looks too large." };
+  }
   if (!Number.isFinite(expectedSalary) || expectedSalary < 0) {
     return { ok: false, error: "Expected salary must be a valid number." };
+  }
+  if (!Number.isInteger(expectedSalary)) {
+    return { ok: false, error: "Expected salary must be a whole number." };
+  }
+  if (expectedSalary > 1_000_000_000) {
+    return { ok: false, error: "Expected salary looks too large." };
   }
 
   const skillsRaw = String(fd.get("skills") ?? "");
@@ -96,9 +125,66 @@ function extractApplicantPayload(
     skills,
   };
 
-  if (!data.fullName || !data.email) {
+  const fullName = String(data.fullName ?? "").trim();
+  const email = String(data.email ?? "").trim();
+  const phone = String(data.phone ?? "").trim();
+  const appliedRole = String(data.appliedRole ?? "").trim();
+  const availableStartDate = String(data.availableStartDate ?? "").trim();
+
+  if (!fullName || !email) {
     return { ok: false, error: "Full name and email are required." };
   }
+  if (fullName.length < 2) {
+    return { ok: false, error: "Full name must be at least 2 characters." };
+  }
+  if (fullName.length > 120) {
+    return { ok: false, error: "Full name must be at most 120 characters." };
+  }
+  if (!isValidEmail(email)) {
+    return { ok: false, error: "Email must be a valid email address." };
+  }
+  if (email.length > 254) {
+    return { ok: false, error: "Email is too long." };
+  }
+
+  if (phone) {
+    const digits = countPhoneDigits(phone);
+    if (digits < 11 || digits > 15) {
+      return {
+        ok: false,
+        error: "Phone must include at least 11 digits (and at most 15).",
+      };
+    }
+  }
+
+  if (!appliedRole) {
+    return { ok: false, error: "Applied role is required." };
+  }
+  if (appliedRole.length > 120) {
+    return { ok: false, error: "Applied role must be at most 120 characters." };
+  }
+
+  const status = String(data.status);
+  if (!status) {
+    return { ok: false, error: "Status is required." };
+  }
+  if (!(APPLICANT_STATUS as readonly string[]).includes(status)) {
+    return {
+      ok: false,
+      error: `Status must be one of: ${APPLICANT_STATUS.join(", ")}`,
+    };
+  }
+  if (availableStartDate) {
+    if (!isValidIsoDateOnly(availableStartDate)) {
+      return { ok: false, error: "Available start date must be a valid date." };
+    }
+  }
+
+  data.fullName = fullName;
+  data.email = email;
+  data.phone = phone;
+  data.appliedRole = appliedRole;
+  data.availableStartDate = availableStartDate;
 
   if (options.includeOptionalCreatedAt) {
     const createdAtLocal = String(fd.get("createdAt") ?? "");
@@ -222,6 +308,8 @@ function ApplicantForm(props: ApplicantFormProps) {
           id={id("fullName")}
           name="fullName"
           type="text"
+          minLength={2}
+          maxLength={120}
           autoComplete="name"
           defaultValue={row ? String(row.fullName ?? "") : ""}
         />
@@ -237,6 +325,7 @@ function ApplicantForm(props: ApplicantFormProps) {
           id={id("email")}
           name="email"
           type="email"
+          maxLength={254}
           autoComplete="email"
           defaultValue={row ? String(row.email ?? "") : ""}
         />
@@ -251,6 +340,9 @@ function ApplicantForm(props: ApplicantFormProps) {
           id={id("phone")}
           name="phone"
           type="tel"
+          maxLength={40}
+          inputMode="tel"
+          title="Optional. If provided, include at least 11 digits."
           autoComplete="tel"
           defaultValue={row ? String(row.phone ?? "") : ""}
         />
@@ -261,10 +353,12 @@ function ApplicantForm(props: ApplicantFormProps) {
           Applied role
         </label>
         <input
+          required
           className={fieldClass}
           id={id("appliedRole")}
           name="appliedRole"
           type="text"
+          maxLength={120}
           defaultValue={row ? String(row.appliedRole ?? "") : ""}
         />
       </div>
@@ -280,6 +374,7 @@ function ApplicantForm(props: ApplicantFormProps) {
             name="yearsOfExperience"
             type="number"
             min={0}
+            max={80}
             step={1}
             defaultValue={row ? safeNumber(row.yearsOfExperience, 0) : 0}
           />
@@ -294,6 +389,7 @@ function ApplicantForm(props: ApplicantFormProps) {
             name="expectedSalary"
             type="number"
             min={0}
+            max={1_000_000_000}
             step={1}
             defaultValue={row ? safeNumber(row.expectedSalary, 0) : 0}
           />
