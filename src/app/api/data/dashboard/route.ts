@@ -61,7 +61,7 @@ export const GET = withErrorHandling(async (_request: Request) => {
     tablesDB.listRows({
       databaseId: interviewTable.databaseId,
       tableId: interviewTable.tableId,
-      queries: [],
+      queries: [Query.equal("status", ['scheduled']), Query.limit(5), Query.orderDesc("scheduledAt")],
       ttl: 0,
     }),
     ...APPLICANT_STATUS.map((status) =>
