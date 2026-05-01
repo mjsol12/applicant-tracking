@@ -18,6 +18,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
 
 import type { Applicant, ApplicantResult } from "./column";
 import { useState } from "react";
@@ -35,9 +37,9 @@ export function DataTable({ columns, data }: DataTableProps) {
     data: data.rows,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
     state: {
       sorting,
     },
@@ -52,12 +54,33 @@ export function DataTable({ columns, data }: DataTableProps) {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
+                  {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                    <button
+                      type="button"
+                      className={cn(
+                        "-ml-2 inline-flex h-8 items-center gap-1 rounded-md px-2 text-left font-medium text-muted-foreground hover:bg-muted/80 hover:text-foreground",
+                        header.column.getIsSorted() && "text-foreground"
+                      )}
+                      onClick={header.column.getToggleSortingHandler()}
+                    >
+                      {flexRender(
                         header.column.columnDef.header,
                         header.getContext()
                       )}
+                      {header.column.getIsSorted() === "asc" ? (
+                        <ArrowUp className="size-4 shrink-0 opacity-70" aria-hidden />
+                      ) : header.column.getIsSorted() === "desc" ? (
+                        <ArrowDown className="size-4 shrink-0 opacity-70" aria-hidden />
+                      ) : (
+                        <ArrowUpDown className="size-4 shrink-0 opacity-40" aria-hidden />
+                      )}
+                    </button>
+                  ) : (
+                    flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )
+                  )}
                 </TableHead>
               ))}
             </TableRow>
