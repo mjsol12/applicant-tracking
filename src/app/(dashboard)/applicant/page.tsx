@@ -7,6 +7,24 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import Search from "@/components/ui/search";
 
+function ApplicantTableSkeleton() {
+  return (
+    <div className="flex h-full flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <div className="h-10 w-64 animate-pulse rounded-md bg-muted" />
+        <div className="h-10 w-36 animate-pulse rounded-md bg-muted" />
+      </div>
+      <div className="rounded-md border">
+        <div className="space-y-3 p-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="h-10 animate-pulse rounded-md bg-muted" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 async function getData(search?: string): Promise<ApplicantResult> {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
@@ -52,7 +70,7 @@ export default async function Page({
 
   return (
     <>
-      <Suspense fallback={<div>Loading data...</div>}>
+      <Suspense fallback={<ApplicantTableSkeleton />}>
           <div className="flex flex-col gap-4 h-full">
             <div className="flex items-center justify-between">
               <Search placeholder="Search applicants" />

@@ -24,8 +24,7 @@ export default async function EditApplicantPage({ params }: Props) {
 
   return (
     <ApplicantRouteDialog
-      title="Edit applicant"
-      description={`Applicant id: ${id}`}
+      title="Edit Applicant"
     >
       <EditApplicantForm rowId={id} row={loaded.row} />
     </ApplicantRouteDialog>
