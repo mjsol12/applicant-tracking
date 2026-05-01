@@ -1,22 +1,15 @@
-import { getLoggedInUser } from "@/lib/appwrite-server";
-import { redirect } from "next/navigation";
-
-import { ApplicantRouteDialog } from "../../applicant-route-dialog";
+import { ApplicantRouteDialog } from "../../../applicant-route-dialog";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
-export default async function EditApplicantPage({ params }: Props) {
-  const user = await getLoggedInUser();
-  if (!user) {
-    redirect("/login");
-  }
-
+export default async function InterceptEditApplicantPage({ params }: Props) {
   const { id } = await params;
 
   return (
     <ApplicantRouteDialog
+      closeMode="back"
       title="Edit applicant"
       description={`Applicant id: ${id}`}
     >
