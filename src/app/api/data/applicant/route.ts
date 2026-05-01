@@ -69,8 +69,22 @@ export async function GET(request: Request) {
     if (search) {
       queries.push(Query.search("fullName", search));
     }
+
+    queries.push(Query.limit(10));
+    queries.push(Query.orderDesc("$createdAt"));
+
+
+    const direction = url.searchParams.get("diretion");
+    const cursor = url.searchParams.get("cursor");
+
+    if (cursor) {
+      if (direction === 'next') {
+          queries.push(Query.cursorAfter(cursor));
+      } else {
+          queries.push(Query.cursorBefore(cursor));
+      }
+    }
     
-    const total = url.searchParams.get("total") === "true";
     const ttlRaw = url.searchParams.get("ttl");
     const ttl = ttlRaw === null ? 0 : Number(ttlRaw);
     const safeTtl = Number.isFinite(ttl) ? ttl : 0;
@@ -79,11 +93,17 @@ export async function GET(request: Request) {
       databaseId: table.databaseId,
       tableId: table.tableId,
       queries,
-      total,
       ttl: safeTtl,
     });
 
-    return NextResponse.json({ rows: result.rows, total: result.total });
+
+    if (result.total === 0) {
+      return NextResponse.json({ rows: [], total: 0, previusCursor: null , nextCursor: null});
+    }
+
+    const nextCursor = result.rows[result.rows.length - 1].$id;
+
+    return NextResponse.json({ rows: result.rows, total: result.total, previusCursor: cursor , nextCursor: nextCursor});
   } catch (error) {
     return handleError(error);
   }
