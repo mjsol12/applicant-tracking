@@ -45,7 +45,6 @@ const FIELD_LABELS: Record<string, string> = {
   yearsOfExperience: "Years of Experience",
   $createdAt: "Created At",
   $updatedAt: "Updated At",
-  $id: "Applicant ID",
 };
 
 const DISPLAY_ORDER = [
@@ -61,7 +60,6 @@ const DISPLAY_ORDER = [
   "yearsOfExperience",
   "$createdAt",
   "$updatedAt",
-  "$id",
 ];
 
 async function getInterviewsByApplicant(applicantId: string): Promise<InterviewListResult> {
@@ -111,10 +109,10 @@ export default async function ApplicantDetailsPage({ params }: Props) {
       <div className="flex items-center justify-between gap-3">
         <h1 className="text-xl font-semibold">Applicant Details</h1>
         <div className="flex items-center gap-2">
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="outline">
             <Link href="/applicant">Back</Link>
           </Button>
-          <Button asChild size="sm">
+          <Button asChild >
             <Link href={`/applicant/${id}/edit`}>Edit</Link>
           </Button>
         </div>
@@ -144,7 +142,7 @@ export default async function ApplicantDetailsPage({ params }: Props) {
             </div>
             <Button asChild size="sm">
               <Link href={`/applicant/${encodeURIComponent(id)}/interview/new`}>
-                Add interview
+                Schedule Interview
               </Link>
             </Button>
           </div>
@@ -155,9 +153,6 @@ export default async function ApplicantDetailsPage({ params }: Props) {
             <ul className="divide-y">
               {interviews.rows.map((interview) => (
                 <li key={interview.$id} className="space-y-1 p-4 text-sm">
-                  <p>
-                    <span className="font-medium">Interview ID:</span> {interview.$id}
-                  </p>
                   <p>
                     <span className="font-medium">Interviewer:</span>{" "}
                     {formatValue(interview.interviewerId)}

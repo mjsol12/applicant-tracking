@@ -63,8 +63,6 @@ export default async function DashboardPage() {
 
   const dashboardData = await getDashboardData();
 
-  console.log(dashboardData);
-
   return (
     <div className="space-y-6 px-4 py-4">
       <h1 className="text-lg font-medium">Dashboard</h1>

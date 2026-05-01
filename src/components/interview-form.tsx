@@ -95,7 +95,7 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
         </p>
       ) : null}
 
-      <div>
+      <div hidden={true}>
         <label className={labelClass} htmlFor="applicantId">
           Applicant ID
         </label>

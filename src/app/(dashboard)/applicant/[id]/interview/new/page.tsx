@@ -24,8 +24,8 @@ export default async function NewInterviewPage({ params }: Props) {
 
   return (
     <ApplicantRouteDialog
-      title="New interview"
-      description={`Assign interview for applicant: ${id}`}
+      title="Schedule Interview"
+      description={`Schedule an interview for the applicant`}
       backHref={`/applicant/${id}`}
     >
       <NewInterviewForm applicantId={id} />
