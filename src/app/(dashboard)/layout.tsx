@@ -1,4 +1,4 @@
-import { TopNav } from "@/components/nav";
+import { SideNav, TopNav } from "@/components/nav";
 
 export default function DashboardLayout({
   children,
@@ -7,15 +7,13 @@ export default function DashboardLayout({
 }) {
   return (
     <>
-      <TopNav title="Applicant List" />
-      <div className="px-6 pt-4">
-        <form action="/api/auth/logout" method="post">
-          <button className="rounded-md border px-3 py-1.5 text-sm" type="submit">
-            Logout
-          </button>
-        </form>
+      <div className="flex min-h-[100dvh]">
+        <SideNav />
+        <div className="flex-grow overflow-auto">
+          <TopNav title="Applicant List" />
+          <main>{children}</main>
+        </div>
       </div>
-      <main>{children}</main>
     </>
   );
 }
