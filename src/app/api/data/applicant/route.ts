@@ -98,12 +98,14 @@ export async function GET(request: Request) {
 
 
     if (result.total === 0) {
-      return NextResponse.json({ rows: [], total: 0, previusCursor: null , nextCursor: null});
+      return NextResponse.json({ rows: [], total: 0, previousCursor: null , nextCursor: null});
     }
 
     const nextCursor = result.rows[result.rows.length - 1].$id;
 
-    return NextResponse.json({ rows: result.rows, total: result.total, previusCursor: cursor , nextCursor: nextCursor});
+    const previousCursor = result.rows[0].$id;
+
+    return NextResponse.json({ rows: result.rows, total: result.total, previousCursor , nextCursor});
   } catch (error) {
     return handleError(error);
   }

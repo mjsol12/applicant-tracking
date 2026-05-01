@@ -39,6 +39,8 @@ export type Applicant = {
 export type ApplicantResult = {
   rows: Applicant[];
   total: number;
+  nextCursor: string | null;
+  previousCursor: string | null;
 };
 
 function formatCellDate(value: unknown): string {

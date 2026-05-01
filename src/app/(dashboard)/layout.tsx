@@ -11,7 +11,7 @@ export default function DashboardLayout({
         <SideNav />
         <div className="flex-grow overflow-auto">
           <TopNav title="Applicant List" />
-          <main>{children}</main>
+          <main className="p-4">{children}</main>
         </div>
       </div>
     </>

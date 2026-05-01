@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import type { Applicant, ApplicantResult } from "./column";
 import { useState } from "react";
@@ -32,6 +33,9 @@ interface DataTableProps {
 export function DataTable({ columns, data }: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState({})
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
  
 
   const table = useReactTable({
@@ -47,6 +51,18 @@ export function DataTable({ columns, data }: DataTableProps) {
       rowSelection,
     },
   });
+
+  const handlePagination = (direction: "next" | "previous") => {
+    const cursor = direction === "next" ? data.nextCursor : data.previousCursor
+    if (!cursor) return
+
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("direct", direction)
+    params.set("cursor", cursor)
+
+    const nextUrl = params.toString() ? `${pathname}?${params.toString()}` : pathname
+    router.replace(nextUrl)
+  }
 
   return (<div>
     <div className="overflow-hidden rounded-md border">
@@ -121,16 +137,16 @@ export function DataTable({ columns, data }: DataTableProps) {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => handlePagination('previous')}
+          disabled={!data.previousCursor}
         >
           Previous
         </Button>
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={() => handlePagination('next')}
+          disabled={!data.nextCursor}
         >
           Next
         </Button>
