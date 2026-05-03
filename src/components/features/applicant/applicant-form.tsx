@@ -7,78 +7,10 @@ import { FormField } from "@/components/composites/form-field";
 import { Container } from "@/components/ui/container";
 import { Input, inputClassName } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { cn, isValidEmail, countPhoneDigits, safeNumber, parseSkills, isValidIsoDateOnly, datetimeLocalToIso, formatDateInput, skillsToTextarea } from "@/lib/utils";
 import { APPLICANT_STATUS, API_URL_APPLICANT } from "@/config/applicant";
 
 const SKILLS_PLACEHOLDER = "React, TypeScript\nSQL";
-
-function parseSkills(raw: string): string[] {
-  const value = raw.trim();
-  if (!value) return [];
-
-  if (value.startsWith("[")) {
-    try {
-      const parsed: unknown = JSON.parse(value);
-      if (Array.isArray(parsed)) {
-        return parsed.map((s) => String(s).trim()).filter(Boolean);
-      }
-    } catch {
-      // fall through
-    }
-  }
-
-  return value
-    .split(/[\n,]+/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
-
-function datetimeLocalToIso(value: string): string | undefined {
-  if (!value.trim()) return undefined;
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? undefined : d.toISOString();
-}
-
-function formatDateInput(value: unknown): string {
-  const s = String(value ?? "").trim();
-  if (!s) return "";
-  if (s.length >= 10 && s[4] === "-" && s[7] === "-") {
-    return s.slice(0, 10);
-  }
-  if (s.includes("T")) {
-    return s.slice(0, 10);
-  }
-  return s;
-}
-
-function skillsToTextarea(value: unknown): string {
-  if (Array.isArray(value)) {
-    return value.map(String).join("\n");
-  }
-  return String(value ?? "");
-}
-
-function safeNumber(value: unknown, fallback = 0): number {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : fallback;
-}
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function isValidEmail(email: string): boolean {
-  if (!email) return false;
-  return EMAIL_RE.test(email);
-}
-
-function countPhoneDigits(phone: string): number {
-  return phone.replace(/\D/g, "").length;
-}
-
-function isValidIsoDateOnly(value: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-  const d = new Date(`${value}T00:00:00`);
-  return !Number.isNaN(d.getTime());
-}
 
 type ExtractResult =
   | { ok: true; data: Record<string, unknown> }
