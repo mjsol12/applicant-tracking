@@ -1,10 +1,8 @@
 "use client";
 
-import Container from "../container";
-
 export default function TopNav({ title }: { title: string }) {
   return (
-    <Container className="flex h-16 items-center justify-between border-b border-border">
+    <div className="max-w-8xl mx-auto w-full px-6 tablet:px-10 desktop:px-14 flex h-16 items-center justify-between border-b border-border">
       <h1 className="text-2xl font-medium">{title}</h1>
       <div className="px-6 pt-4">
         <form action="/api/auth/logout" method="post">
@@ -16,6 +14,6 @@ export default function TopNav({ title }: { title: string }) {
           </button>
         </form>
       </div>
-    </Container>
+    </div>
   );
 }
