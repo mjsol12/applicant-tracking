@@ -8,23 +8,15 @@ import {
 } from "@/lib/fetch/internal-context";
 import { formatDisplayValue, formatFieldValue } from "@/lib/utils";
 import { loadApplicant } from "@/app/(dashboard)/applicant/_shared/load-applicant";
-import { API_URL_INTERVIEW } from "@/config/interview";
+import { API_URL_INTERVIEW, type Interview, INTERVIEW_STATUS_ENUM } from "@/config/interview";
+import { DISPLAY_ORDER_APPLICANT, VIEW_FIELD_LABELS_APPLICANT } from "@/config/applicant";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
 
-type InterviewRow = {
-  $id: string;
-  interviewerId?: string;
-  status?: string;
-  scheduledAt?: string;
-  notes?: string;
-  $createdAt?: string;
-};
-
 type InterviewListResult = {
-  rows: InterviewRow[];
+  rows: Interview[];
   total: number;
 };
 
@@ -34,36 +26,6 @@ const DATE_FIELDS = new Set([
   "scheduledAt",
   "availableStartDate",
 ]);
-
-const FIELD_LABELS: Record<string, string> = {
-  fullName: "Full Name",
-  email: "Email",
-  phone: "Phone",
-  address: "Address",
-  status: "Status",
-  appliedRole: "Applied Role",
-  skills: "Skills",
-  availableStartDate: "Available Start Date",
-  expectedSalary: "Expected Salary",
-  yearsOfExperience: "Years of Experience",
-  $createdAt: "Created At",
-  $updatedAt: "Updated At",
-};
-
-const DISPLAY_ORDER = [
-  "fullName",
-  "email",
-  "phone",
-  "address",
-  "status",
-  "appliedRole",
-  "skills",
-  "availableStartDate",
-  "expectedSalary",
-  "yearsOfExperience",
-  "$createdAt",
-  "$updatedAt",
-];
 
 async function getInterviewsByApplicant(
   applicantId: string,
@@ -118,13 +80,13 @@ export default async function ApplicantDetailsPage({ params }: Props) {
       <div className="grid grid-cols-1 gap-4 desktop:grid-cols-2">
         <div className="rounded-md border">
           <dl className="divide-y">
-            {DISPLAY_ORDER.map((key) => (
+            {DISPLAY_ORDER_APPLICANT.map((key) => (
               <div
                 key={key}
                 className="grid grid-cols-1 gap-2 p-4 tablet:grid-cols-3"
               >
                 <dt className="text-sm font-medium text-muted-foreground">
-                  {FIELD_LABELS[key] ?? key}
+                  {VIEW_FIELD_LABELS_APPLICANT[key as keyof typeof VIEW_FIELD_LABELS_APPLICANT] ?? key}
                 </dt>
                 <dd className="break-words tablet:col-span-2">
                   {formatFieldValue(key, row[key], DATE_FIELDS)}
@@ -166,7 +128,7 @@ export default async function ApplicantDetailsPage({ params }: Props) {
                   </p>
                   <p>
                     <span className="font-medium">Status:</span>{" "}
-                    {formatDisplayValue(interview.status)}
+                    {INTERVIEW_STATUS_ENUM[interview.status as keyof typeof INTERVIEW_STATUS_ENUM] ?? formatDisplayValue(interview.status) }
                   </p>
                   <p>
                     <span className="font-medium">Scheduled At:</span>{" "}

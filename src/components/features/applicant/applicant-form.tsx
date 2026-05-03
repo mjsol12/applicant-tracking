@@ -5,10 +5,11 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/composites/form-field";
 import { Container } from "@/components/ui/container";
-import { Input, inputClassName } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { cn, isValidEmail, countPhoneDigits, safeNumber, parseSkills, isValidIsoDateOnly, datetimeLocalToIso, formatDateInput, skillsToTextarea } from "@/lib/utils";
-import { APPLICANT_STATUS, API_URL_APPLICANT } from "@/config/applicant";
+import { isValidEmail, countPhoneDigits, safeNumber, parseSkills, isValidIsoDateOnly, datetimeLocalToIso, formatDateInput, skillsToTextarea } from "@/lib/utils";
+import { APPLICANT_STATUS, API_URL_APPLICANT, APPLICANT_APPLIED_ROLE, APPLICANT_APPLIED_ROLE_ENUM } from "@/config/applicant";
 
 const SKILLS_PLACEHOLDER = "React, TypeScript\nSQL";
 
@@ -272,14 +273,14 @@ function ApplicantForm(props: ApplicantFormProps) {
         </FormField>
 
         <FormField id={id("appliedRole")} label="Applied Role">
-          <Input
-            required
-            id={id("appliedRole")}
-            name="appliedRole"
-            type="text"
-            maxLength={120}
-            defaultValue={row ? String(row.appliedRole ?? "") : ""}
-          />
+          <Select id={id("appliedRole")} name="appliedRole" defaultValue={row ? String(row.appliedRole ?? "") : ""}>
+            {statusExtra ? <option value={statusExtra}>{statusExtra}</option> : null}
+            {APPLICANT_APPLIED_ROLE.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+        </Select>
         </FormField>
       </Container>
 
@@ -309,19 +310,14 @@ function ApplicantForm(props: ApplicantFormProps) {
       </Container>
 
       <FormField id={id("status")} label="Status">
-        <select
-          className={cn(inputClassName, "h-10")}
-          id={id("status")}
-          name="status"
-          defaultValue={statusValue}
-        >
+        <Select id={id("status")} name="status" defaultValue={statusValue}>
           {statusExtra ? <option value={statusExtra}>{statusExtra}</option> : null}
           {APPLICANT_STATUS.map((s) => (
             <option key={s} value={s}>
-              {s}
+              {APPLICANT_APPLIED_ROLE_ENUM[s as keyof typeof APPLICANT_APPLIED_ROLE_ENUM] ?? s}
             </option>
           ))}
-        </select>
+        </Select>
       </FormField>
 
       <FormField id={id("availableStartDate")} label="Available Start Date">

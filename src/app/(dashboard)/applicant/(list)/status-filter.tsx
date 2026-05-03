@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   APPLICANT_STATUS,
+  APPLICANT_STATUS_ENUM,
   type ApplicantStatus,
 } from "@/config/applicant";
 
@@ -55,7 +56,7 @@ export function ApplicantStatusFilter() {
           <option value="">All</option>
           {APPLICANT_STATUS.map((s) => (
             <option key={s} value={s}>
-              {s}
+              {APPLICANT_STATUS_ENUM[s as keyof typeof APPLICANT_STATUS_ENUM] ?? s}
             </option>
           ))}
         </select>

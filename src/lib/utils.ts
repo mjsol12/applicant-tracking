@@ -1,3 +1,5 @@
+import { APPLICANT_APPLIED_ROLE_ENUM, APPLICANT_STATUS_ENUM } from "@/config/applicant";
+import { INTERVIEW_STATUS_ENUM } from "@/config/interview";
 import { type ClassValue, clsx } from "clsx";
 import { format, isValid, parse, parseISO } from "date-fns";
 import { twMerge } from "tailwind-merge";
@@ -56,6 +58,8 @@ export function formatFieldValue(
   ]),
 ): string {
   if (dateFields.has(key)) return formatDateValue(value);
+  if (key === "status") return INTERVIEW_STATUS_ENUM[value as keyof typeof INTERVIEW_STATUS_ENUM] ?? APPLICANT_STATUS_ENUM[value as keyof typeof APPLICANT_STATUS_ENUM];
+  if (key === "appliedRole") return APPLICANT_APPLIED_ROLE_ENUM[value as keyof typeof APPLICANT_APPLIED_ROLE_ENUM];
   return formatDisplayValue(value);
 }
 
@@ -125,4 +129,8 @@ export function isValidIsoDateOnly(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const d = new Date(`${value}T00:00:00`);
   return !Number.isNaN(d.getTime());
+}
+
+export function formatCurrencyValue(value: number): string {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
 }

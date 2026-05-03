@@ -12,9 +12,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/patterns/dropdown-menu";
-import { API_URL_APPLICANT, APPLICANT_COLUMNS, TABLE_NAME_APPLICANT, type Applicant } from "@/config/applicant";
+import { API_URL_APPLICANT, APPLICANT_APPLIED_ROLE_ENUM, APPLICANT_COLUMNS, APPLICANT_STATUS_ENUM, TABLE_NAME_APPLICANT, type Applicant } from "@/config/applicant";
 import { useDeleteResource } from "@/components/use-delete-resource";
-import { formatCellDate } from "@/lib/utils";
+import { formatCellDate, formatCurrencyValue } from "@/lib/utils";
 
 function ApplicantRowActions({ rowId }: { rowId: string }) {
   const router = useRouter();
@@ -112,10 +112,26 @@ export const columns: ColumnDef<Applicant>[] = [
     header: "Actions",
     cell: ({ row }) => <ApplicantRowActions rowId={row.original.$id} />,
   },
+  {
+    accessorKey: "appliedRole",
+    header: "Applied Role",
+    cell: ({ getValue }) => APPLICANT_APPLIED_ROLE_ENUM[getValue() as keyof typeof APPLICANT_APPLIED_ROLE_ENUM] ?? getValue()
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ getValue }) => APPLICANT_STATUS_ENUM[getValue() as keyof typeof APPLICANT_STATUS_ENUM] ?? getValue()
+  },
   ...APPLICANT_COLUMNS,
+  {
+    accessorKey: "expectedSalary",
+    header: "Expected Salary",
+    cell: ({ getValue }) => formatCurrencyValue(getValue() as number ?? 0)
+  },
   {
     accessorKey: "availableStartDate",
     header: "Available Start",
     cell: ({ getValue }) => formatCellDate(getValue()),
   },
 ];
+
