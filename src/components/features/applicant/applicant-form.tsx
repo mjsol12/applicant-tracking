@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { FormField } from "@/components/composites/form-field";
 import { Container } from "@/components/ui/container";
 import { Input, inputClassName } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { APPLICANT_STATUS, API_URL_APPLICANT } from "@/config/applicant";
@@ -298,8 +298,7 @@ function ApplicantForm(props: ApplicantFormProps) {
       ) : null}
 
       <Container size="flush" className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <Label htmlFor={id("fullName")}>Full name</Label>
+        <FormField id={id("fullName")} label="Full name">
           <Input
             required
             id={id("fullName")}
@@ -310,10 +309,9 @@ function ApplicantForm(props: ApplicantFormProps) {
             autoComplete="name"
             defaultValue={row ? String(row.fullName ?? "") : ""}
           />
-        </div>
+        </FormField>
 
-        <div>
-          <Label htmlFor={id("email")}>Email</Label>
+        <FormField id={id("email")} label="Email">
           <Input
             required
             id={id("email")}
@@ -323,24 +321,25 @@ function ApplicantForm(props: ApplicantFormProps) {
             autoComplete="email"
             defaultValue={row ? String(row.email ?? "") : ""}
           />
-        </div>
+        </FormField>
 
-        <div>
-          <Label htmlFor={id("phone")}>Phone</Label>
+        <FormField
+          id={id("phone")}
+          label="Phone"
+          hint="Optional. If provided, include at least 11 digits."
+        >
           <Input
             id={id("phone")}
             name="phone"
             type="tel"
             maxLength={40}
             inputMode="tel"
-            title="Optional. If provided, include at least 11 digits."
             autoComplete="tel"
             defaultValue={row ? String(row.phone ?? "") : ""}
           />
-        </div>
+        </FormField>
 
-        <div>
-          <Label htmlFor={id("appliedRole")}>Applied Role</Label>
+        <FormField id={id("appliedRole")} label="Applied Role">
           <Input
             required
             id={id("appliedRole")}
@@ -349,12 +348,11 @@ function ApplicantForm(props: ApplicantFormProps) {
             maxLength={120}
             defaultValue={row ? String(row.appliedRole ?? "") : ""}
           />
-        </div>
+        </FormField>
       </Container>
 
       <Container size="flush" className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <Label htmlFor={id("yearsOfExperience")}>Years of experience</Label>
+        <FormField id={id("yearsOfExperience")} label="Years of experience">
           <Input
             id={id("yearsOfExperience")}
             name="yearsOfExperience"
@@ -364,9 +362,8 @@ function ApplicantForm(props: ApplicantFormProps) {
             step={1}
             defaultValue={row ? safeNumber(row.yearsOfExperience, 0) : 0}
           />
-        </div>
-        <div>
-          <Label htmlFor={id("expectedSalary")}>Expected salary</Label>
+        </FormField>
+        <FormField id={id("expectedSalary")} label="Expected salary">
           <Input
             id={id("expectedSalary")}
             name="expectedSalary"
@@ -376,11 +373,10 @@ function ApplicantForm(props: ApplicantFormProps) {
             step={1}
             defaultValue={row ? safeNumber(row.expectedSalary, 0) : 0}
           />
-        </div>
+        </FormField>
       </Container>
 
-      <div>
-        <Label htmlFor={id("status")}>Status</Label>
+      <FormField id={id("status")} label="Status">
         <select
           className={cn(inputClassName, "h-10")}
           id={id("status")}
@@ -394,20 +390,18 @@ function ApplicantForm(props: ApplicantFormProps) {
             </option>
           ))}
         </select>
-      </div>
+      </FormField>
 
-      <div>
-        <Label htmlFor={id("availableStartDate")}>Available Start Date</Label>
+      <FormField id={id("availableStartDate")} label="Available Start Date">
         <Input
           id={id("availableStartDate")}
           name="availableStartDate"
           type="date"
           defaultValue={row ? formatDateInput(row.availableStartDate) : ""}
         />
-      </div>
+      </FormField>
 
-      <div>
-        <Label htmlFor={id("skills")}>Skills (comma or newline separated)</Label>
+      <FormField id={id("skills")} label="Skills (comma or newline separated)">
         <Textarea
           className="min-h-[100px] py-2"
           id={id("skills")}
@@ -415,7 +409,7 @@ function ApplicantForm(props: ApplicantFormProps) {
           placeholder={SKILLS_PLACEHOLDER}
           defaultValue={row ? skillsToTextarea(row.skills) : ""}
         />
-      </div>
+      </FormField>
 
       <Container size="flush" className="flex gap-3 pt-2">
         <Button disabled={pending} type="submit">
