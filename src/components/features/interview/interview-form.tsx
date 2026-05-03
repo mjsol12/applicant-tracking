@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input, inputClassName } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { INTERVIEW_STATUS, API_URL_INTERVIEW } from "@/config/interview";
+import { INTERVIEW_STATUS, API_URL_INTERVIEW, INTERVIEW_STATUS_ENUM } from "@/config/interview";
+import { TABLE_NAME_APPLICANT } from "@/config/applicant";
 
 function datetimeLocalToIso(value: string): string | undefined {
   if (!value.trim()) return undefined;
@@ -75,8 +76,16 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
         return;
       }
 
-      router.push(`/applicant/${encodeURIComponent(nextApplicantId)}`);
-      router.refresh();
+      const detailHref = `/${TABLE_NAME_APPLICANT}/${encodeURIComponent(nextApplicantId)}`;
+      if (typeof window !== "undefined" && window.history.length > 1) {
+        router.back();
+        queueMicrotask(() => {
+          router.refresh();
+        });
+      } else {
+        router.push(detailHref);
+        router.refresh();
+      }
     } catch {
       setError("Network error. Try again.");
     } finally {
@@ -121,7 +130,7 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
         >
           {INTERVIEW_STATUS.map((s) => (
             <option key={s} value={s}>
-              {s}
+              {INTERVIEW_STATUS_ENUM[s as keyof typeof INTERVIEW_STATUS_ENUM] ?? s}
             </option>
           ))}
         </select>
@@ -144,6 +153,10 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
           type="button"
           variant="outline"
           onClick={() => {
+            if (typeof window !== "undefined" && window.history.length > 1) {
+              router.back();
+              return;
+            }
             if (applicantId) {
               router.push(`/applicant/${encodeURIComponent(applicantId)}`);
               return;
