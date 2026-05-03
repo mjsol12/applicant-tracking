@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { Query } from "node-appwrite";
 import { createSessionClient } from "@/lib/appwrite-server";
 import { withErrorHandling } from "@/lib/withErrorHandling";
-import { APPLICANT_STATUS } from "@/types/enum";
+import { APPLICANT_STATUS } from "@/config/applicant";
 
 type TableConfig = { databaseId: string; tableId: string };
 

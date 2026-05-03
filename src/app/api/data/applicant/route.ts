@@ -3,7 +3,7 @@ import { ID, Query } from "node-appwrite";
 import { createSessionClient } from "@/lib/appwrite-server";
 import { isPlainObject } from "@/lib/utils";
 import { withErrorHandling } from "@/lib/withErrorHandling";
-import { APPLICANT_STATUS, type ApplicantStatus } from "@/types/enum";
+import { APPLICANT_STATUS, type ApplicantStatus } from "@/config/applicant";
 
 type ApplicantTable = { databaseId: string; tableId: string };
 

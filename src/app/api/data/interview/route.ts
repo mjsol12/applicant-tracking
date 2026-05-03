@@ -3,7 +3,7 @@ import { ID, Query } from "node-appwrite";
 import { createSessionClient } from "@/lib/appwrite-server";
 import { isPlainObject } from "@/lib/utils";
 import { withErrorHandling } from "@/lib/withErrorHandling";
-import { INTERVIEW_STATUS, type InterviewStatus } from "@/types/enum";
+import { INTERVIEW_STATUS, type InterviewStatus } from "@/config/interview";
 
 type InterviewTable = { databaseId: string; tableId: string };
 
