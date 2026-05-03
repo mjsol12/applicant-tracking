@@ -37,6 +37,7 @@ Expected fields used by routes/UI:
 - `expectedSalary` (number)
 - `yearsOfExperience` (number)
 - system fields: `$id`, `$createdAt`, `$updatedAt`
+- **Interviews (one-to-many):** Each applicant can have many interview rows. The link is stored only on the interview side: `Interview.applicantId` → this table’s `$id`. There is no interview list field on the applicant document; list interviews with `GET /api/data/interview?applicantId=…`.
 
 ### Interview table
 
@@ -49,7 +50,7 @@ Expected fields used by routes/UI:
 
 - `applicantId` (string; links to applicant `$id`)
 - `interviewerId` (string)
-- `status` (string; one of `scheduled|completed|cancelled|no_show`)
+- `status` (string; one of `scheduled|in_progress|completed|cancelled|no_show`; see `INTERVIEW_STATUS` in `src/config/interview.ts`)
 - `scheduledAt` (datetime string/ISO)
 - `notes` (string)
 - system fields: `$id`, `$createdAt`, `$updatedAt`

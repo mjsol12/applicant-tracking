@@ -6,7 +6,7 @@ Next.js dashboard template using VisActor charts, Tailwind UI, and Appwrite inte
 
 ## Stack
 
-- Next.js 15
+- Next.js 16
 - React 18
 - TypeScript
 - Tailwind CSS
@@ -82,20 +82,22 @@ docs/
 public/                        # Static assets (icons, images, placeholders)
 src/
 ├── app/
-│   ├── (dashboard)/           # Protected dashboard/applicant routes
+│   ├── (dashboard)/           # Protected dashboard; applicant uses @modal + intercepts
 │   ├── api/
 │   │   ├── auth/              # Login/logout route handlers
 │   │   └── data/              # Applicant/interview/dashboard APIs
 │   ├── login/                 # Login page
 │   └── layout.tsx             # App root layout
 ├── components/
+│   ├── features/              # applicant-form, interview-form, skeletons, …
 │   ├── nav/                   # Top/side navigation components
-│   ├── ui/                    # Reusable UI primitives
-│   ├── applicant-form.tsx
-│   └── interview-form.tsx
+│   └── ui/                    # Reusable UI primitives (Input, Select, …)
 ├── lib/                       # Appwrite env/server clients, errors, utils
 └── types/                     # Shared enums/types
 ```
+
+**Applicant modals:** Under `src/app/(dashboard)/applicant`, the layout renders `children` plus a parallel `@modal` slot. Intercept routes in `@modal/(.)…` open `/applicant/new`, `/applicant/[id]/edit`, and `/applicant/[id]/interview/new` as dialogs over the list or detail when you navigate with in-app links from those pages. A full reload or opening the URL directly uses the regular page routes (same paths, no intercept).
+
 ## Deployment
 
 - Deployed under Appwrite Deployments.
