@@ -82,7 +82,6 @@ File: `src/app/api/data/applicant/route.ts`
   - search: `search` -> `Query.search("fullName", search)`
   - filter: `status` -> `Query.equal("status", [status])` (must be one of `APPLICANT_STATUS`)
   - pagination: `cursor` + `direction` (`next` uses `cursorAfter`, otherwise `cursorBefore`)
-    - backwards compatible aliases: `direct`, `diretion` (same meaning as `direction`)
   - default sort: `Query.orderDesc("$createdAt")`
   - default limit: `10`
 - `GET ?rowId=...`: fetch single applicant row
@@ -99,7 +98,7 @@ File: `src/app/api/data/interview/route.ts`
   - `interviewerId`
   - `status` (validated against `INTERVIEW_STATUS`)
   - `search` -> `Query.search("notes", search)`
-  - pagination: `cursor` + `direct|direction|diretion`
+  - pagination: `cursor` + `direct|direction`
   - default sort: `Query.orderDesc("$createdAt")`
   - default limit: `10`
 - `GET ?rowId=...`: fetch single interview row

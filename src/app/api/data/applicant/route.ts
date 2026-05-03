@@ -72,8 +72,8 @@ export const GET = withErrorHandling(async (request: Request) => {
 
   const paginationDirection =
     url.searchParams.get("direction") ??
-    url.searchParams.get("direct") ??
-    url.searchParams.get("diretion");
+    url.searchParams.get("direct");
+
   const cursor = url.searchParams.get("cursor");
 
   if (cursor) {

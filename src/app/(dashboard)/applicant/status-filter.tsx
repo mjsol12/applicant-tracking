@@ -18,7 +18,7 @@ const fieldClass = cn(
 function buildNextParams(searchParams: URLSearchParams, nextStatus: string) {
   const params = new URLSearchParams(searchParams.toString());
 
-  for (const key of ["cursor", "direction", "direct", "diretion"]) {
+  for (const key of ["cursor", "direction", "direct"]) {
     params.delete(key);
   }
 

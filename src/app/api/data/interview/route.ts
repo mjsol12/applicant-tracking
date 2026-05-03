@@ -100,8 +100,7 @@ export const GET = withErrorHandling(async (request: Request) => {
 
   const direction =
     url.searchParams.get("direct") ??
-    url.searchParams.get("direction") ??
-    url.searchParams.get("diretion");
+    url.searchParams.get("direction");
   const cursor = url.searchParams.get("cursor");
 
   if (cursor) {
