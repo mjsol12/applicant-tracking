@@ -1,8 +1,11 @@
-import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getLoggedInUser } from "@/lib/appwrite-server";
+import {
+  getInternalFetchContext,
+  internalServerFetchInit,
+} from "@/lib/fetch/internal-context";
 import { formatDisplayValue, formatFieldValue } from "@/lib/utils";
 import { loadApplicant } from "../load-applicant";
 
@@ -64,20 +67,10 @@ const DISPLAY_ORDER = [
 async function getInterviewsByApplicant(
   applicantId: string,
 ): Promise<InterviewListResult> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? "http";
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((c) => `${c.name}=${c.value}`)
-    .join("; ");
+  const { origin, cookieHeader } = await getInternalFetchContext();
 
-  const url = `${proto}://${host}/api/data/interview?applicantId=${encodeURIComponent(applicantId)}&limit=20`;
-  const res = await fetch(url, {
-    headers: cookieHeader ? { cookie: cookieHeader } : {},
-    cache: "no-store",
-  });
+  const url = `${origin}/api/data/interview?applicantId=${encodeURIComponent(applicantId)}&limit=20`;
+  const res = await fetch(url, internalServerFetchInit(cookieHeader));
 
   if (res.status === 401) {
     return { rows: [], total: 0 };

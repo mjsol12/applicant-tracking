@@ -1,4 +1,7 @@
-import { cookies, headers } from "next/headers";
+import {
+  getInternalFetchContext,
+  internalServerFetchInit,
+} from "@/lib/fetch/internal-context";
 
 export type LoadApplicantResult =
   | { ok: true; row: Record<string, unknown> }
@@ -7,21 +10,11 @@ export type LoadApplicantResult =
 export async function loadApplicant(
   rowId: string,
 ): Promise<LoadApplicantResult> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? "http";
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((c) => `${c.name}=${c.value}`)
-    .join("; ");
+  const { origin, cookieHeader } = await getInternalFetchContext();
 
   const res = await fetch(
-    `${proto}://${host}/api/data/applicant?rowId=${encodeURIComponent(rowId)}`,
-    {
-      headers: cookieHeader ? { cookie: cookieHeader } : {},
-      cache: "no-store",
-    },
+    `${origin}/api/data/applicant?rowId=${encodeURIComponent(rowId)}`,
+    internalServerFetchInit(cookieHeader),
   );
 
   if (res.status === 401) {

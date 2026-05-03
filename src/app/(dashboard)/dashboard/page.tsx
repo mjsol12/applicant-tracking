@@ -1,7 +1,11 @@
-import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getLoggedInUser } from "@/lib/appwrite-server";
+import { fetchJson } from "@/lib/fetch/fetch-json";
+import {
+  getInternalFetchContext,
+  internalServerFetchInit,
+} from "@/lib/fetch/internal-context";
 import { formatFieldValue } from "@/lib/utils";
 
 type ApplicantStatus = "applied" | "interview" | "hired" | "rejected";
@@ -31,29 +35,16 @@ const statusLabelMap: Record<ApplicantStatus, string> = {
 };
 
 async function getDashboardData(): Promise<DashboardData> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? "http";
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore
-    .getAll()
-    .map((c) => `${c.name}=${c.value}`)
-    .join("; ");
+  const { origin, cookieHeader } = await getInternalFetchContext();
 
-  const res = await fetch(`${proto}://${host}/api/data/dashboard`, {
-    headers: cookieHeader ? { cookie: cookieHeader } : {},
-    cache: "no-store",
-  });
-
-  if (res.status === 401) {
-    redirect("/login");
-  }
-
-  if (!res.ok) {
-    throw new Error("Failed to load dashboard data");
-  }
-
-  return (await res.json()) as DashboardData;
+  return fetchJson<DashboardData>(
+    `${origin}/api/data/dashboard`,
+    internalServerFetchInit(cookieHeader),
+    {
+      fallbackMessage: "Failed to load dashboard data",
+      onUnauthorized: () => redirect("/login"),
+    },
+  );
 }
 
 export default async function DashboardPage() {
