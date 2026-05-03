@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
 import { Query } from "node-appwrite";
 import { createSessionClient } from "@/lib/appwrite-server";
+import {
+  getApplicantTableRef,
+  getInterviewTableRef,
+} from "@/lib/appwrite-env";
 import { withErrorHandling } from "@/lib/withErrorHandling";
 import { APPLICANT_STATUS } from "@/config/applicant";
 
 type TableConfig = { databaseId: string; tableId: string };
 
 function resolveApplicantTable(): TableConfig | NextResponse {
-  const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "";
-  const tableId =
-    process.env.NEXT_PUBLIC_APPWRITE_APPLICANT_COLLECTION_ID || "";
-
-  if (!databaseId || !tableId) {
+  const ref = getApplicantTableRef();
+  if (!ref) {
     return NextResponse.json(
       {
         error:
@@ -20,16 +21,12 @@ function resolveApplicantTable(): TableConfig | NextResponse {
       { status: 503 },
     );
   }
-
-  return { databaseId, tableId };
+  return ref;
 }
 
 function resolveInterviewTable(): TableConfig | NextResponse {
-  const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "";
-  const tableId =
-    process.env.NEXT_PUBLIC_APPWRITE_INTERVIEW_COLLECTION_ID || "";
-
-  if (!databaseId || !tableId) {
+  const ref = getInterviewTableRef();
+  if (!ref) {
     return NextResponse.json(
       {
         error:
@@ -38,8 +35,7 @@ function resolveInterviewTable(): TableConfig | NextResponse {
       { status: 503 },
     );
   }
-
-  return { databaseId, tableId };
+  return ref;
 }
 
 export const GET = withErrorHandling(async (_request: Request) => {

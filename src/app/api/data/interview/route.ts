@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ID, Query } from "node-appwrite";
+import { getInterviewTableRef } from "@/lib/appwrite-env";
 import { createSessionClient } from "@/lib/appwrite-server";
 import { isPlainObject } from "@/lib/utils";
 import { withErrorHandling } from "@/lib/withErrorHandling";
@@ -8,10 +9,8 @@ import { INTERVIEW_STATUS, type InterviewStatus } from "@/config/interview";
 type InterviewTable = { databaseId: string; tableId: string };
 
 function resolveInterviewTable(): InterviewTable | NextResponse {
-  const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "";
-  const tableId =
-    process.env.NEXT_PUBLIC_APPWRITE_INTERVIEW_COLLECTION_ID || "";
-  if (!databaseId || !tableId) {
+  const ref = getInterviewTableRef();
+  if (!ref) {
     return NextResponse.json(
       {
         error:
@@ -20,7 +19,7 @@ function resolveInterviewTable(): InterviewTable | NextResponse {
       { status: 503 },
     );
   }
-  return { databaseId, tableId };
+  return ref;
 }
 
 async function getTablesDB() {

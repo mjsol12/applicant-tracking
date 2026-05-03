@@ -3,11 +3,14 @@
 import { cookies } from "next/headers";
 import { Account, Client, TablesDB } from "node-appwrite";
 import { APPWRITE_SESSION_COOKIE } from "./auth-constants";
+import {
+  getAppwriteClientConfig,
+  getAppwriteServerApiKey,
+} from "./appwrite-env";
 
 export async function createSessionClient() {
-  const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
-    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!);
+  const { endpoint, projectId } = getAppwriteClientConfig();
+  const client = new Client().setEndpoint(endpoint).setProject(projectId);
 
   const session = (await cookies()).get(APPWRITE_SESSION_COOKIE);
   if (!session || !session.value) {
@@ -27,10 +30,11 @@ export async function createSessionClient() {
 }
 
 export async function createAdminClient() {
+  const { endpoint, projectId } = getAppwriteClientConfig();
   const client = new Client()
-    .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
-    .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!)
-    .setKey(process.env.NEXT_SECRET_KEY!);
+    .setEndpoint(endpoint)
+    .setProject(projectId)
+    .setKey(getAppwriteServerApiKey());
 
   return {
     get account() {

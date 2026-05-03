@@ -2,7 +2,10 @@
 
 import { ChevronDown } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { APPLICANT_STATUS, type ApplicantStatus } from "@/types/enum";
+import {
+  APPLICANT_STATUS,
+  type ApplicantStatus,
+} from "@/config/applicant";
 
 import { cn } from "@/lib/utils";
 

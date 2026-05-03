@@ -36,14 +36,13 @@ GENERATE: COPY MY KEY [DOCS ENV](https://docs.google.com/document/d/15P_qzQ8g0w8
 IF you want to access my appwrite, let me know I'll give you credentails.
 
 ```env
-NEXT_PUBLIC_APPWRITE_PROJECT_ID = ""
-NEXT_PUBLIC_APPWRITE_PROJECT_NAME = ""
-NEXT_PUBLIC_APPWRITE_ENDPOINT = ""
-NEXT_PUBLIC_APPWRITE_DATABASE_ID = ""
-NEXT_PUBLIC_APPWRITE_APPLICANT_COLLECTION_ID = ""
-NEXT_PUBLIC_APPWRITE_INTERVIEW_COLLECTION_ID = ""
-NEXT_SECRET_APPWRITE_API_KEY = ""
-NEXT_SECRET_KEY = ""
+NEXT_PUBLIC_APPWRITE_PROJECT_ID=""
+NEXT_PUBLIC_APPWRITE_PROJECT_NAME=""
+NEXT_PUBLIC_APPWRITE_ENDPOINT=""
+NEXT_PUBLIC_APPWRITE_DATABASE_ID=""
+NEXT_PUBLIC_APPWRITE_APPLICANT_COLLECTION_ID=""
+NEXT_PUBLIC_APPWRITE_INTERVIEW_COLLECTION_ID=""
+NEXT_SECRET_KEY=""
 ```
 
 4. Start dev server:
@@ -94,13 +93,13 @@ src/
 │   ├── ui/                    # Reusable UI primitives
 │   ├── applicant-form.tsx
 │   └── interview-form.tsx
-├── lib/                       # Appwrite client, errors, shared utils
+├── lib/                       # Appwrite env/server clients, errors, utils
 └── types/                     # Shared enums/types
 ```
 ## Deployment
 
 - Deployed under Appwrite Deployments.
-- Ensure all `NEXT_PUBLIC_APPWRITE_*` variables are set in your deployment environment.
+- Ensure all `NEXT_PUBLIC_APPWRITE_*` variables are set in your deployment environment, plus `NEXT_SECRET_KEY` for any code path using the admin server client.
 - This project is dependency-managed with `pnpm` (`pnpm-lock.yaml`), so use pnpm in CI/build where possible.
 
 

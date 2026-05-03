@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { ApplicantStatus } from "@/types/enum";
+import type { ApplicantStatus } from "@/config/applicant";
 
 export type Applicant = {
   fullName: string;

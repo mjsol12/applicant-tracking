@@ -13,7 +13,7 @@ Set these in `.env` (also mirrored in `.env.example`):
 - `NEXT_PUBLIC_APPWRITE_INTERVIEW_COLLECTION_ID`
 - `NEXT_SECRET_KEY` (server key used by `createAdminClient`)
 
-Routes use `createSessionClient()` from `src/lib/appwrite-server.ts`, so calls are made in the authenticated user session.
+Reads and validation helpers live in `src/lib/appwrite-env.ts`. Routes use `createSessionClient()` from `src/lib/appwrite-server.ts`, so calls are made in the authenticated user session.
 
 ## Tables
 
@@ -30,7 +30,7 @@ Expected fields used by routes/UI:
 - `email` (string)
 - `phone` (string)
 - `address` (string)
-- `status` (string; expected values align with `APPLICANT_STATUS` in `src/types/enum.ts`)
+- `status` (string; expected values align with `APPLICANT_STATUS` in `src/config/applicant.ts`)
 - `appliedRole` (string)
 - `skills` (string array)
 - `availableStartDate` (date/string)
