@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { FormField } from "@/components/composites/form-field";
 import { Button } from "@/components/ui/button";
 import { Input, inputClassName } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { INTERVIEW_STATUS, API_URL_INTERVIEW } from "@/config/interview";
@@ -92,10 +92,7 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
         </p>
       ) : null}
 
-      <div hidden={true}>
-        <Label htmlFor="applicantId" hideLabel>
-          Applicant ID
-        </Label>
+      <FormField id="applicantId" label="Applicant ID" hideLabel className="hidden">
         <Input
           required
           id="applicantId"
@@ -103,10 +100,9 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
           type="text"
           defaultValue={applicantId}
         />
-      </div>
+      </FormField>
 
-      <div>
-        <Label htmlFor="interviewerId">Interviewer</Label>
+      <FormField id="interviewerId" label="Interviewer">
         <Input
           required
           id="interviewerId"
@@ -114,10 +110,9 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
           type="text"
           placeholder="Name Only Temporary"
         />
-      </div>
+      </FormField>
 
-      <div>
-        <Label htmlFor="status">Status</Label>
+      <FormField id="status" label="Status">
         <select
           className={cn(inputClassName, "h-10")}
           id="status"
@@ -130,17 +125,15 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
             </option>
           ))}
         </select>
-      </div>
+      </FormField>
 
-      <div>
-        <Label htmlFor="scheduledAt">Scheduled at</Label>
+      <FormField id="scheduledAt" label="Scheduled at">
         <Input id="scheduledAt" name="scheduledAt" type="datetime-local" />
-      </div>
+      </FormField>
 
-      <div>
-        <Label htmlFor="notes">Notes</Label>
+      <FormField id="notes" label="Notes">
         <Textarea className="min-h-[90px] py-2" id="notes" name="notes" required />
-      </div>
+      </FormField>
 
       <div className="flex gap-3 pt-2">
         <Button disabled={pending} type="submit">
