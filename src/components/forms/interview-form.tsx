@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { INTERVIEW_STATUS } from "@/config/interview";
+import { INTERVIEW_STATUS, API_URL_INTERVIEW } from "@/config/interview";
 
 const fieldClass =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -65,7 +65,7 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
 
     setPending(true);
     try {
-      const res = await fetch("/api/data/interview", {
+      const res = await fetch(API_URL_INTERVIEW, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

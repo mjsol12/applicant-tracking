@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { EditApplicantForm } from "@/components/applicant-form";
+import { EditApplicantForm } from "@/components/forms/applicant-form";
 import { getLoggedInUser } from "@/lib/appwrite-server";
 import { ApplicantRouteDialog } from "../../../applicant-route-dialog";
 import { loadApplicant } from "../../../load-applicant";

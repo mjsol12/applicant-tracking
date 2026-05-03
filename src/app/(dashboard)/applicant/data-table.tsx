@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import type { Applicant, ApplicantResult } from "./column";
+import { Container } from "@/components/ui/container";
 
 interface DataTableProps {
   columns: ColumnDef<Applicant>[];
@@ -68,8 +69,8 @@ export function DataTable({ columns, data }: DataTableProps) {
   };
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="flex-1 overflow-hidden rounded-md border">
+    <Container size="flush" query={true} className="flex flex-1 flex-col">
+      <Container size="flush" query={true} className="flex-1 overflow-hidden">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -143,10 +144,12 @@ export function DataTable({ columns, data }: DataTableProps) {
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="flex items-center justify-between">
-        <p>Results: {data.total}</p>
-        <div className="flex items-center justify-end space-x-2 py-4">
+      </Container>
+      <Container size="flush" className="flex items-center justify-between py-4">
+        <Container size="flush">
+            <p>Results: {data.total}</p>
+        </Container>
+        <Container size="flush" className="flex items-center justify-end space-x-2">
           <Button
             variant="outline"
             size="sm"
@@ -163,8 +166,8 @@ export function DataTable({ columns, data }: DataTableProps) {
           >
             Next
           </Button>
-        </div>
-      </div>
-    </div>
+        </Container>
+      </Container>
+    </Container>
   );
 }

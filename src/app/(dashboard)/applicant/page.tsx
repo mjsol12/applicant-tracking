@@ -8,10 +8,14 @@ import {
   getInternalFetchContext,
   internalServerFetchInit,
 } from "@/lib/fetch/internal-context";
+import { API_URL_APPLICANT } from "@/config/applicant";
 import { type ApplicantResult, columns } from "./column";
 import { DataTable } from "./data-table";
 import { ApplicantStatusFilter } from "./status-filter";
 import { TableSkeleton } from "@/components/ui/skeleton/table";
+import { Container } from "@/components/ui/container";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 async function getData(params: {
   search?: string;
@@ -28,7 +32,7 @@ async function getData(params: {
   if (params.direction) qs.set("direction", params.direction);
 
   const query = qs.toString();
-  const apiUrl = `${origin}/api/data/applicant${query ? `?${query}` : ""}`;
+  const apiUrl = `${origin}${API_URL_APPLICANT}${query ? `?${query}` : ""}`;
 
   return fetchJson<ApplicantResult>(
     apiUrl,
@@ -61,21 +65,21 @@ export default async function Page({
   return (
     <>
       <Suspense fallback={<TableSkeleton />}>
-        <div className="flex h-full flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-4">
+        <Container size="full" query={true} className="flex h-full flex-col gap-4">
+          <Container size="flush" query={true} className="flex flex-wrap items-center justify-between gap-3">
+            <Container size="flush" className="flex min-w-0 flex-1 flex-nowrap items-center gap-4">
               <Search placeholder="Search applicants" />
               <ApplicantStatusFilter />
-            </div>
+            </Container>
             <Link
               href="/applicant/new"
-              className="rounded-md bg-blue-500 px-4 py-2 text-white underline no-underline"
+              className={cn(buttonVariants({ variant: "default", size: "sm" }))}
             >
-              Add new applicant
+              New Applicant
             </Link>
-          </div>
+          </Container>
           <DataTable columns={columns} data={data} />
-        </div>
+        </Container>
       </Suspense>
     </>
   );

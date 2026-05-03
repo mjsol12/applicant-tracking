@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { NewApplicantForm } from "@/components/applicant-form";
+import { NewApplicantForm } from "@/components/forms/applicant-form";
 import { getLoggedInUser } from "@/lib/appwrite-server";
 import { ApplicantRouteDialog } from "../applicant-route-dialog";
 

@@ -7,6 +7,7 @@ import {
   internalServerFetchInit,
 } from "@/lib/fetch/internal-context";
 import { formatFieldValue } from "@/lib/utils";
+import { Container } from "@/components/ui/container";
 
 type ApplicantStatus = "applied" | "interview" | "hired" | "rejected";
 
@@ -57,31 +58,31 @@ export default async function DashboardPage() {
   const DATE_FIELDS = new Set(["scheduledAt"]);
 
   return (
-    <div className="space-y-6 px-4 py-4">
+    <Container size="full" query={true} className="space-y-6 px-4 py-4">
       <h1 className="text-lg font-medium">Dashboard</h1>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-md border p-4">
+      <Container className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Container size="full" className="rounded-md border p-4">
           <p className="text-sm text-muted-foreground">Total applicants</p>
           <p className="mt-2 text-2xl font-semibold">
             {dashboardData.totalApplicants}
           </p>
-        </div>
+        </Container>
 
         {Object.entries(dashboardData.applicantsPerStatus).map(
           ([status, count]) => (
-            <div key={status} className="rounded-md border p-4">
+            <Container key={status} className="rounded-md border p-4">
               <p className="text-sm text-muted-foreground">
                 {statusLabelMap[status as ApplicantStatus]}
               </p>
               <p className="mt-2 text-2xl font-semibold">{count}</p>
-            </div>
+            </Container>
           ),
         )}
-      </div>
+      </Container>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-md border p-4">
+      <Container className="grid gap-4 lg:grid-cols-2">
+        <Container className="rounded-md border p-4">
           <h2 className="text-base font-medium">Recent applicants</h2>
           <ul className="mt-3 space-y-3">
             {dashboardData.recentApplicants.map((applicant) => (
@@ -93,14 +94,14 @@ export default async function DashboardPage() {
                   href={`/applicant/${encodeURIComponent(applicant.$id)}`}
                   className="flex items-center justify-between px-3 py-2"
                 >
-                  <div>
+                  <Container>
                     <p className="text-sm font-medium">
                       {applicant.fullName ?? "Unknown"}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {applicant.appliedRole ?? "N/A"}
                     </p>
-                  </div>
+                  </Container>
                   <p className="text-xs text-muted-foreground">
                     {applicant.status ?? "N/A"}
                   </p>
@@ -108,9 +109,9 @@ export default async function DashboardPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Container>
 
-        <div className="rounded-md border p-4">
+        <Container className="rounded-md border p-4">
           <h2 className="text-base font-medium">Upcoming interviews</h2>
           <ul className="mt-3 space-y-3">
             {dashboardData.upcomingInterviews.map((interview) => (
@@ -118,15 +119,15 @@ export default async function DashboardPage() {
                 key={interview.$id}
                 className="flex items-center justify-between rounded-md border px-3 py-2"
               >
-                <div>
+                <Container>
                   <p className="text-sm font-medium">
                     {interview.applicantId ?? "Unknown applicant"}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {interview.status ?? "N/A"}
                   </p>
-                </div>
-                <div className="text-right text-xs text-muted-foreground">
+                </Container>
+                <Container className="text-right text-xs text-muted-foreground">
                   <p>
                     {formatFieldValue(
                       "scheduledAt",
@@ -134,12 +135,12 @@ export default async function DashboardPage() {
                       DATE_FIELDS,
                     )}
                   </p>
-                </div>
+                </Container>
               </li>
             ))}
           </ul>
-        </div>
-      </div>
-    </div>
+        </Container>
+      </Container>
+    </Container>
   );
 }
