@@ -2,6 +2,7 @@ import {
   getInternalFetchContext,
   internalServerFetchInit,
 } from "@/lib/fetch/internal-context";
+import { API_URL_APPLICANT } from "@/config/applicant";
 
 export type LoadApplicantResult =
   | { ok: true; row: Record<string, unknown> }
@@ -13,7 +14,7 @@ export async function loadApplicant(
   const { origin, cookieHeader } = await getInternalFetchContext();
 
   const res = await fetch(
-    `${origin}/api/data/applicant?rowId=${encodeURIComponent(rowId)}`,
+    `${origin}${API_URL_APPLICANT}?rowId=${encodeURIComponent(rowId)}`,
     internalServerFetchInit(cookieHeader),
   );
 

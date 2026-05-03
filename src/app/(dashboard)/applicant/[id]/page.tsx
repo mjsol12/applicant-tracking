@@ -8,6 +8,7 @@ import {
 } from "@/lib/fetch/internal-context";
 import { formatDisplayValue, formatFieldValue } from "@/lib/utils";
 import { loadApplicant } from "../load-applicant";
+import { API_URL_INTERVIEW } from "@/config/interview";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -69,7 +70,7 @@ async function getInterviewsByApplicant(
 ): Promise<InterviewListResult> {
   const { origin, cookieHeader } = await getInternalFetchContext();
 
-  const url = `${origin}/api/data/interview?applicantId=${encodeURIComponent(applicantId)}&limit=20`;
+  const url = `${origin}${API_URL_INTERVIEW}?applicantId=${encodeURIComponent(applicantId)}&limit=20`;
   const res = await fetch(url, internalServerFetchInit(cookieHeader));
 
   if (res.status === 401) {

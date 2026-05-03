@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { ApplicantStatus } from "@/config/applicant";
+import { API_URL_APPLICANT } from "@/config/applicant";
 
 export type Applicant = {
   fullName: string;
@@ -65,7 +66,7 @@ function ApplicantRowActions({ rowId }: { rowId: string }) {
     setPending(true);
     try {
       const res = await fetch(
-        `/api/data/applicant?rowId=${encodeURIComponent(rowId)}`,
+        `${API_URL_APPLICANT}?rowId=${encodeURIComponent(rowId)}`,
         { method: "DELETE", credentials: "include" },
       );
       const json = (await res.json().catch(() => ({}))) as { error?: string };
