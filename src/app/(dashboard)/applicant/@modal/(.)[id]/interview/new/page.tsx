@@ -24,8 +24,8 @@ export default async function InterceptNewInterviewPage({ params }: Props) {
   return (
     <ApplicantRouteDialog
       closeMode="back"
-      title="New interview"
-      description={`Assign interview for applicant: ${id}`}
+      title="New Interview Activity"
+      description={`Add Activity Interview For The Applicant`}
       backHref={`/applicant/${id}`}
     >
       <NewInterviewForm applicantId={id} />

@@ -108,7 +108,9 @@ export default async function ApplicantDetailsPage({ params }: Props) {
             <Link href="/applicant">Back</Link>
           </Button>
           <Button asChild>
-            <Link href={`/applicant/${id}/edit`}>Edit</Link>
+            <Link href={`/applicant/${id}/edit`} scroll={false}>
+              Edit
+            </Link>
           </Button>
         </div>
       </div>
@@ -143,6 +145,7 @@ export default async function ApplicantDetailsPage({ params }: Props) {
             <Button asChild size="sm">
               <Link
                 href={`/applicant/${encodeURIComponent(id)}/interview/new`}
+                scroll={false}
               >
                 Schedule Interview
               </Link>

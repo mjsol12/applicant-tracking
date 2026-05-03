@@ -86,6 +86,7 @@ export default async function ApplicantListPage({
             </Container>
             <Link
               href="/applicant/new"
+              scroll={false}
               className={cn(buttonVariants({ variant: "default", size: "sm" }))}
             >
               New Applicant

@@ -52,7 +52,12 @@ function ApplicantRowActions({ rowId }: { rowId: string }) {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={`/${TABLE_NAME_APPLICANT}/${rowId}/edit`}>Edit</Link>
+            <Link
+              href={`/${TABLE_NAME_APPLICANT}/${rowId}/edit`}
+              scroll={false}
+            >
+              Edit
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
