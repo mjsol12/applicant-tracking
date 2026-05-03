@@ -3,13 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input, inputClassName } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { INTERVIEW_STATUS, API_URL_INTERVIEW } from "@/config/interview";
-
-const fieldClass =
-  "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
-
-const labelClass = "mb-1 block text-sm font-medium text-foreground";
 
 function datetimeLocalToIso(value: string): string | undefined {
   if (!value.trim()) return undefined;
@@ -95,12 +93,11 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
       ) : null}
 
       <div hidden={true}>
-        <label className={labelClass} htmlFor="applicantId">
+        <Label htmlFor="applicantId" hideLabel>
           Applicant ID
-        </label>
-        <input
+        </Label>
+        <Input
           required
-          className={fieldClass}
           id="applicantId"
           name="applicantId"
           type="text"
@@ -109,12 +106,9 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="interviewerId">
-          Interviewer
-        </label>
-        <input
+        <Label htmlFor="interviewerId">Interviewer</Label>
+        <Input
           required
-          className={fieldClass}
           id="interviewerId"
           name="interviewerId"
           type="text"
@@ -123,11 +117,9 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="status">
-          Status
-        </label>
+        <Label htmlFor="status">Status</Label>
         <select
-          className={cn(fieldClass, "h-10")}
+          className={cn(inputClassName, "h-10")}
           id="status"
           name="status"
           defaultValue={INTERVIEW_STATUS[0]}
@@ -141,27 +133,13 @@ export function NewInterviewForm({ applicantId = "" }: NewInterviewFormProps) {
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="scheduledAt">
-          Scheduled at
-        </label>
-        <input
-          className={fieldClass}
-          id="scheduledAt"
-          name="scheduledAt"
-          type="datetime-local"
-        />
+        <Label htmlFor="scheduledAt">Scheduled at</Label>
+        <Input id="scheduledAt" name="scheduledAt" type="datetime-local" />
       </div>
 
       <div>
-        <label className={labelClass} htmlFor="notes">
-          Notes
-        </label>
-        <textarea
-          className={cn(fieldClass, "min-h-[90px] resize-y py-2")}
-          id="notes"
-          name="notes"
-          required
-        />
+        <Label htmlFor="notes">Notes</Label>
+        <Textarea className="min-h-[90px] py-2" id="notes" name="notes" required />
       </div>
 
       <div className="flex gap-3 pt-2">

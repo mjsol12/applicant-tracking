@@ -3,13 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Container } from "@/components/ui/container";
+import { Input, inputClassName } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { APPLICANT_STATUS, API_URL_APPLICANT } from "@/config/applicant";
-
-const fieldClass =
-  "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
-
-const labelClass = "mb-1 block text-sm font-medium text-foreground";
 
 const SKILLS_PLACEHOLDER = "React, TypeScript\nSQL";
 
@@ -249,7 +248,7 @@ function ApplicantForm(props: ApplicantFormProps) {
 
     setPending(true);
     try {
-      const res = await fetch( API_URL_APPLICANT, {
+      const res = await fetch(API_URL_APPLICANT, {
         method: mode === "create" ? "POST" : "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -284,11 +283,11 @@ function ApplicantForm(props: ApplicantFormProps) {
   const submitLabel =
     mode === "create"
       ? pending
-        ? "Creating…"
-        : "Create applicant"
+        ? "Creating..."
+        : "Create Applicant"
       : pending
-        ? "Saving…"
-        : "Save changes";
+        ? "Saving..."
+        : "Save Changes";
 
   return (
     <form key={formKey} className="mt-6 max-w-xl space-y-4" onSubmit={onSubmit}>
@@ -298,78 +297,65 @@ function ApplicantForm(props: ApplicantFormProps) {
         </p>
       ) : null}
 
-      <div>
-        <label className={labelClass} htmlFor={id("fullName")}>
-          Full name
-        </label>
-        <input
-          required
-          className={fieldClass}
-          id={id("fullName")}
-          name="fullName"
-          type="text"
-          minLength={2}
-          maxLength={120}
-          autoComplete="name"
-          defaultValue={row ? String(row.fullName ?? "") : ""}
-        />
-      </div>
-
-      <div>
-        <label className={labelClass} htmlFor={id("email")}>
-          Email
-        </label>
-        <input
-          required
-          className={fieldClass}
-          id={id("email")}
-          name="email"
-          type="email"
-          maxLength={254}
-          autoComplete="email"
-          defaultValue={row ? String(row.email ?? "") : ""}
-        />
-      </div>
-
-      <div>
-        <label className={labelClass} htmlFor={id("phone")}>
-          Phone
-        </label>
-        <input
-          className={fieldClass}
-          id={id("phone")}
-          name="phone"
-          type="tel"
-          maxLength={40}
-          inputMode="tel"
-          title="Optional. If provided, include at least 11 digits."
-          autoComplete="tel"
-          defaultValue={row ? String(row.phone ?? "") : ""}
-        />
-      </div>
-
-      <div>
-        <label className={labelClass} htmlFor={id("appliedRole")}>
-          Applied role
-        </label>
-        <input
-          required
-          className={fieldClass}
-          id={id("appliedRole")}
-          name="appliedRole"
-          type="text"
-          maxLength={120}
-          defaultValue={row ? String(row.appliedRole ?? "") : ""}
-        />
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
+      <Container size="flush" className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className={labelClass} htmlFor={id("yearsOfExperience")}>
-            Years of experience
-          </label>
-          <input
-            className={fieldClass}
+          <Label htmlFor={id("fullName")}>Full name</Label>
+          <Input
+            required
+            id={id("fullName")}
+            name="fullName"
+            type="text"
+            minLength={2}
+            maxLength={120}
+            autoComplete="name"
+            defaultValue={row ? String(row.fullName ?? "") : ""}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor={id("email")}>Email</Label>
+          <Input
+            required
+            id={id("email")}
+            name="email"
+            type="email"
+            maxLength={254}
+            autoComplete="email"
+            defaultValue={row ? String(row.email ?? "") : ""}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor={id("phone")}>Phone</Label>
+          <Input
+            id={id("phone")}
+            name="phone"
+            type="tel"
+            maxLength={40}
+            inputMode="tel"
+            title="Optional. If provided, include at least 11 digits."
+            autoComplete="tel"
+            defaultValue={row ? String(row.phone ?? "") : ""}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor={id("appliedRole")}>Applied Role</Label>
+          <Input
+            required
+            id={id("appliedRole")}
+            name="appliedRole"
+            type="text"
+            maxLength={120}
+            defaultValue={row ? String(row.appliedRole ?? "") : ""}
+          />
+        </div>
+      </Container>
+
+      <Container size="flush" className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <Label htmlFor={id("yearsOfExperience")}>Years of experience</Label>
+          <Input
             id={id("yearsOfExperience")}
             name="yearsOfExperience"
             type="number"
@@ -380,11 +366,8 @@ function ApplicantForm(props: ApplicantFormProps) {
           />
         </div>
         <div>
-          <label className={labelClass} htmlFor={id("expectedSalary")}>
-            Expected salary
-          </label>
-          <input
-            className={fieldClass}
+          <Label htmlFor={id("expectedSalary")}>Expected salary</Label>
+          <Input
             id={id("expectedSalary")}
             name="expectedSalary"
             type="number"
@@ -394,21 +377,17 @@ function ApplicantForm(props: ApplicantFormProps) {
             defaultValue={row ? safeNumber(row.expectedSalary, 0) : 0}
           />
         </div>
-      </div>
+      </Container>
 
       <div>
-        <label className={labelClass} htmlFor={id("status")}>
-          Status
-        </label>
+        <Label htmlFor={id("status")}>Status</Label>
         <select
-          className={cn(fieldClass, "h-10")}
+          className={cn(inputClassName, "h-10")}
           id={id("status")}
           name="status"
           defaultValue={statusValue}
         >
-          {statusExtra ? (
-            <option value={statusExtra}>{statusExtra}</option>
-          ) : null}
+          {statusExtra ? <option value={statusExtra}>{statusExtra}</option> : null}
           {APPLICANT_STATUS.map((s) => (
             <option key={s} value={s}>
               {s}
@@ -418,11 +397,8 @@ function ApplicantForm(props: ApplicantFormProps) {
       </div>
 
       <div>
-        <label className={labelClass} htmlFor={id("availableStartDate")}>
-          Available start date
-        </label>
-        <input
-          className={fieldClass}
+        <Label htmlFor={id("availableStartDate")}>Available Start Date</Label>
+        <Input
           id={id("availableStartDate")}
           name="availableStartDate"
           type="date"
@@ -431,11 +407,9 @@ function ApplicantForm(props: ApplicantFormProps) {
       </div>
 
       <div>
-        <label className={labelClass} htmlFor={id("skills")}>
-          Skills (comma or newline separated)
-        </label>
-        <textarea
-          className={cn(fieldClass, "min-h-[100px] resize-y py-2")}
+        <Label htmlFor={id("skills")}>Skills (comma or newline separated)</Label>
+        <Textarea
+          className="min-h-[100px] py-2"
           id={id("skills")}
           name="skills"
           placeholder={SKILLS_PLACEHOLDER}
@@ -443,7 +417,7 @@ function ApplicantForm(props: ApplicantFormProps) {
         />
       </div>
 
-      <div className="flex gap-3 pt-2">
+      <Container size="flush" className="flex gap-3 pt-2">
         <Button disabled={pending} type="submit">
           {submitLabel}
         </Button>
@@ -455,7 +429,7 @@ function ApplicantForm(props: ApplicantFormProps) {
         >
           Cancel
         </Button>
-      </div>
+      </Container>
     </form>
   );
 }

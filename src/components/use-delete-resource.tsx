@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRef, useState, type ReactNode } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/patterns/dialog";
 
 type ErrorBody = { error?: string };
 

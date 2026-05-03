@@ -20,7 +20,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/patterns/table";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/container";
 import type { Result } from "@/config/search-results";

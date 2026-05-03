@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/patterns/dropdown-menu";
 import { API_URL_APPLICANT, APPLICANT_COLUMNS, TABLE_NAME_APPLICANT, type Applicant } from "@/config/applicant";
 import { useDeleteResource } from "@/components/use-delete-resource";
 import { formatCellDate } from "@/lib/utils";

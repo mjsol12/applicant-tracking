@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import Search from "@/components/ui/search";
+import Search from "@/components/composites/search";
 import { getLoggedInUser } from "@/lib/appwrite-server";
 import { fetchJson } from "@/lib/fetch/fetch-json";
 import {
@@ -9,7 +9,7 @@ import {
   internalServerFetchInit,
 } from "@/lib/fetch/internal-context";
 import { API_URL_APPLICANT } from "@/config/applicant";
-import { TableSkeleton } from "@/components/ui/skeleton/table";
+import { TableSkeleton } from "@/components/features/skeleton/table";
 import { Container } from "@/components/ui/container";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
