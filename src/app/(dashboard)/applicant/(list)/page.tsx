@@ -13,16 +13,18 @@ import { TableSkeleton } from "@/components/ui/skeleton/table";
 import { Container } from "@/components/ui/container";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { type ApplicantResult, columns } from "./column";
 import { ApplicantStatusFilter } from "./status-filter";
 import { DataTable } from "./data-table";
+import type { Result } from "@/config/search-results";
+import type { Applicant } from "@/config/applicant";
+import { columns } from "./column";
 
 async function getData(params: {
   search?: string;
   status?: string;
   cursor?: string;
   direction?: string;
-}): Promise<ApplicantResult> {
+}): Promise<Result<Applicant>> {
   const { origin, cookieHeader } = await getInternalFetchContext();
 
   const qs = new URLSearchParams();
@@ -34,7 +36,7 @@ async function getData(params: {
   const query = qs.toString();
   const apiUrl = `${origin}${API_URL_APPLICANT}${query ? `?${query}` : ""}`;
 
-  return fetchJson<ApplicantResult>(
+  return fetchJson<Result<Applicant>>(
     apiUrl,
     internalServerFetchInit(cookieHeader),
     {

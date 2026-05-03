@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import { format, isValid, parse, parseISO } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -22,6 +23,19 @@ export function formatDateValue(value: unknown): string {
   const date = new Date(String(value));
   if (Number.isNaN(date.getTime())) return String(value);
   return date.toLocaleString();
+}
+
+export function formatCellDate(value: unknown): string {
+  if (value == null || value === "") return "—";
+  const s = String(value).trim();
+  if (!s) return "—";
+
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(s)
+    ? parse(s, "yyyy-MM-dd", new Date())
+    : parseISO(s);
+
+  if (!isValid(d)) return s;
+  return format(d, "MMM d, yyyy");
 }
 
 export function formatDisplayValue(value: unknown): string {

@@ -22,12 +22,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import type { Applicant, ApplicantResult } from "./column";
 import { Container } from "@/components/ui/container";
+import type { Result } from "@/config/search-results";
+import type { Applicant } from "@/config/applicant";
 
 interface DataTableProps {
   columns: ColumnDef<Applicant>[];
-  data: ApplicantResult;
+  data: Result<Applicant>;
 }
 
 export function DataTable({ columns, data }: DataTableProps) {
