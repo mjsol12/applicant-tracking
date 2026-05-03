@@ -1,8 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { NewInterviewForm } from "@/components/forms/interview-form";
 import { getLoggedInUser } from "@/lib/appwrite-server";
-import { ApplicantRouteDialog } from "../../../../applicant-route-dialog";
-import { loadApplicant } from "../../../../load-applicant";
+import { ApplicantRouteDialog } from "@/app/(dashboard)/applicant/_shared/applicant-route-dialog";
+import { loadApplicant } from "@/app/(dashboard)/applicant/_shared/load-applicant";
 
 type Props = {
   params: Promise<{ id: string }>;

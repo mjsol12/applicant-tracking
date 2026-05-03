@@ -145,11 +145,17 @@ export function DataTable({ columns, data }: DataTableProps) {
           </TableBody>
         </Table>
       </Container>
-      <Container size="flush" className="flex items-center justify-between py-4">
+      <Container
+        size="flush"
+        className="flex items-center justify-between py-4"
+      >
         <Container size="flush">
-            <p>Results: {data.total}</p>
+          <p>Results: {data.total}</p>
         </Container>
-        <Container size="flush" className="flex items-center justify-end space-x-2">
+        <Container
+          size="flush"
+          className="flex items-center justify-end space-x-2"
+        >
           <Button
             variant="outline"
             size="sm"

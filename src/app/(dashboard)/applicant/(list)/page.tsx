@@ -9,13 +9,13 @@ import {
   internalServerFetchInit,
 } from "@/lib/fetch/internal-context";
 import { API_URL_APPLICANT } from "@/config/applicant";
-import { type ApplicantResult, columns } from "./column";
-import { DataTable } from "./data-table";
-import { ApplicantStatusFilter } from "./status-filter";
 import { TableSkeleton } from "@/components/ui/skeleton/table";
 import { Container } from "@/components/ui/container";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { type ApplicantResult, columns } from "./column";
+import { ApplicantStatusFilter } from "./status-filter";
+import { DataTable } from "./data-table";
 
 async function getData(params: {
   search?: string;
@@ -44,7 +44,7 @@ async function getData(params: {
   );
 }
 
-export default async function Page({
+export default async function ApplicantListPage({
   searchParams,
 }: {
   searchParams: Promise<{
@@ -65,9 +65,20 @@ export default async function Page({
   return (
     <>
       <Suspense fallback={<TableSkeleton />}>
-        <Container size="full" query={true} className="flex h-full flex-col gap-4">
-          <Container size="flush" query={true} className="flex flex-wrap items-center justify-between gap-3">
-            <Container size="flush" className="flex min-w-0 flex-1 flex-nowrap items-center gap-4">
+        <Container
+          size="full"
+          query={true}
+          className="flex h-full flex-col gap-4"
+        >
+          <Container
+            size="flush"
+            query={true}
+            className="flex flex-wrap items-center justify-between gap-3"
+          >
+            <Container
+              size="flush"
+              className="flex min-w-0 flex-1 flex-nowrap items-center gap-4"
+            >
               <Search placeholder="Search applicants" />
               <ApplicantStatusFilter />
             </Container>

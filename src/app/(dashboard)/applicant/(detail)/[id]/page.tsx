@@ -7,7 +7,7 @@ import {
   internalServerFetchInit,
 } from "@/lib/fetch/internal-context";
 import { formatDisplayValue, formatFieldValue } from "@/lib/utils";
-import { loadApplicant } from "../load-applicant";
+import { loadApplicant } from "@/app/(dashboard)/applicant/_shared/load-applicant";
 import { API_URL_INTERVIEW } from "@/config/interview";
 
 type Props = {
@@ -141,7 +141,9 @@ export default async function ApplicantDetailsPage({ params }: Props) {
               </p>
             </div>
             <Button asChild size="sm">
-              <Link href={`/applicant/${encodeURIComponent(id)}/interview/new`}>
+              <Link
+                href={`/applicant/${encodeURIComponent(id)}/interview/new`}
+              >
                 Schedule Interview
               </Link>
             </Button>
