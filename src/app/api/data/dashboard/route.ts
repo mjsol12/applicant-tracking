@@ -5,7 +5,7 @@ import {
   getApplicantTableRef,
   getInterviewTableRef,
 } from "@/lib/appwrite-env";
-import { withErrorHandling } from "@/lib/withErrorHandling";
+import { withErrorHandling } from "@/utils/withErrorHandling";
 import { APPLICANT_STATUS } from "@/config/applicant";
 
 type TableConfig = { databaseId: string; tableId: string };

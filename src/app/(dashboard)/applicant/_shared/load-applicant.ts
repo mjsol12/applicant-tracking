@@ -1,7 +1,7 @@
 import {
   getInternalFetchContext,
   internalServerFetchInit,
-} from "@/lib/fetch/internal-context";
+} from "@/services/fetch/internal-context";
 import { API_URL_APPLICANT } from "@/config/applicant";
 
 export type LoadApplicantResult =

@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getLoggedInUser } from "@/lib/appwrite-server";
-import { fetchJson } from "@/lib/fetch/fetch-json";
+import { fetchJson } from "@/services/fetch/fetch-json";
 import {
   getInternalFetchContext,
   internalServerFetchInit,
-} from "@/lib/fetch/internal-context";
-import { formatFieldValue } from "@/lib/utils";
+} from "@/services/fetch/internal-context";
+import { formatFieldValue } from "@/utils";
 import { Container } from "@/components/ui/container";
 
 type ApplicantStatus = "applied" | "interview" | "hired" | "rejected";

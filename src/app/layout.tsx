@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Gabarito } from "next/font/google";
 import { siteConfig } from "@/config/site";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import "@/style/globals.css";
 
 const gabarito = Gabarito({ subsets: ["latin"], variable: "--font-gabarito" });

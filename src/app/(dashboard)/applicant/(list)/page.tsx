@@ -3,16 +3,16 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import Search from "@/components/composites/search";
 import { getLoggedInUser } from "@/lib/appwrite-server";
-import { fetchJson } from "@/lib/fetch/fetch-json";
+import { fetchJson } from "@/services/fetch/fetch-json";
 import {
   getInternalFetchContext,
   internalServerFetchInit,
-} from "@/lib/fetch/internal-context";
+} from "@/services/fetch/internal-context";
 import { API_URL_APPLICANT } from "@/config/applicant";
 import { TableSkeleton } from "@/components/features/skeleton/table";
 import { Container } from "@/components/ui/container";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { ApplicantStatusFilter } from "./status-filter";
 import { DataTable } from "./data-table";
 import type { Result } from "@/config/search-results";

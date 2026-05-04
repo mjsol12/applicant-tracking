@@ -8,7 +8,7 @@ import {
   type ApplicantStatus,
 } from "@/config/applicant";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 const fieldClass = cn(
   "h-10 min-w-[150px] rounded-md border border-input bg-background pl-3 pr-10 text-sm",

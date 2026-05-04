@@ -14,7 +14,7 @@ import {
 } from "@/components/patterns/dropdown-menu";
 import { API_URL_APPLICANT, APPLICANT_APPLIED_ROLE_ENUM, APPLICANT_COLUMNS, APPLICANT_STATUS_ENUM, TABLE_NAME_APPLICANT, type Applicant } from "@/config/applicant";
 import { useDeleteResource } from "@/components/use-delete-resource";
-import { formatCellDate, formatCurrencyValue } from "@/lib/utils";
+import { formatCellDate, formatCurrencyValue } from "@/utils";
 
 function ApplicantRowActions({ rowId }: { rowId: string }) {
   const router = useRouter();

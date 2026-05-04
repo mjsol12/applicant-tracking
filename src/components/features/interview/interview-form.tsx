@@ -6,7 +6,7 @@ import { FormField } from "@/components/composites/form-field";
 import { Button } from "@/components/ui/button";
 import { Input, inputClassName } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { INTERVIEW_STATUS, API_URL_INTERVIEW, INTERVIEW_STATUS_ENUM } from "@/config/interview";
 import { TABLE_NAME_APPLICANT } from "@/config/applicant";
 

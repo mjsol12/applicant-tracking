@@ -1,5 +1,5 @@
 import { type NextResponse } from "next/server";
-import { handleError } from "@/lib/errorHandler";
+import { handleError } from "./errorHandler";
 
 type RouteHandler = (request: Request) => Promise<Response | NextResponse>;
 

@@ -8,7 +8,7 @@ import { Container } from "@/components/ui/container";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { isValidEmail, countPhoneDigits, safeNumber, parseSkills, isValidIsoDateOnly, datetimeLocalToIso, formatDateInput, skillsToTextarea } from "@/lib/utils";
+import { isValidEmail, countPhoneDigits, safeNumber, parseSkills, isValidIsoDateOnly, datetimeLocalToIso, formatDateInput, skillsToTextarea } from "@/utils";
 import { APPLICANT_STATUS, API_URL_APPLICANT, APPLICANT_APPLIED_ROLE, APPLICANT_APPLIED_ROLE_ENUM } from "@/config/applicant";
 
 const SKILLS_PLACEHOLDER = "React, TypeScript\nSQL";

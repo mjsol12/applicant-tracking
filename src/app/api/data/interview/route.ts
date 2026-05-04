@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { ID, Query } from "node-appwrite";
 import { getInterviewTableRef } from "@/lib/appwrite-env";
 import { createSessionClient } from "@/lib/appwrite-server";
-import { isPlainObject } from "@/lib/utils";
-import { withErrorHandling } from "@/lib/withErrorHandling";
+import { isPlainObject } from "@/utils";
+import { withErrorHandling } from "@/utils/withErrorHandling";
 import { INTERVIEW_STATUS, type InterviewStatus } from "@/config/interview";
 
 type InterviewTable = { databaseId: string; tableId: string };

@@ -5,8 +5,8 @@ import { getLoggedInUser } from "@/lib/appwrite-server";
 import {
   getInternalFetchContext,
   internalServerFetchInit,
-} from "@/lib/fetch/internal-context";
-import { formatDisplayValue, formatFieldValue } from "@/lib/utils";
+} from "@/services/fetch/internal-context";
+import { formatDisplayValue, formatFieldValue } from "@/utils";
 import { loadApplicant } from "@/app/(dashboard)/applicant/_shared/load-applicant";
 import { API_URL_INTERVIEW, type Interview, INTERVIEW_STATUS_ENUM } from "@/config/interview";
 import { DISPLAY_ORDER_APPLICANT, VIEW_FIELD_LABELS_APPLICANT } from "@/config/applicant";

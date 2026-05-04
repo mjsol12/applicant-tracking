@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/patterns/table";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { Container } from "@/components/ui/container";
 import type { Result } from "@/config/search-results";
 import type { Applicant } from "@/config/applicant";

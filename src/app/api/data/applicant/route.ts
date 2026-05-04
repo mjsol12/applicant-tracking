@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { ID, Query } from "node-appwrite";
 import { getApplicantTableRef } from "@/lib/appwrite-env";
 import { createSessionClient } from "@/lib/appwrite-server";
-import { isPlainObject } from "@/lib/utils";
-import { withErrorHandling } from "@/lib/withErrorHandling";
+import { isPlainObject } from "@/utils";
+import { withErrorHandling } from "@/utils/withErrorHandling";
 import { APPLICANT_STATUS, type ApplicantStatus } from "@/config/applicant";
 
 type ApplicantTable = { databaseId: string; tableId: string };
